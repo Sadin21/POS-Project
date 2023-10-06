@@ -1,0 +1,87 @@
+body { height: 100vh; }
+img[alt="Profile"] { background: #6D7588; }
+.f12 { font-size: 12px; }
+.f14 { font-size: 14px; }
+.f18 { font-size: 18px; }
+.f20 { font-size: 20px; }
+.f24 { font-size: 24px; }
+.cursor-pointer { cursor: pointer; }
+.user-info { width: 136px; }
+.user-info::after { content: none !important; }
+.user-info:hover, .sidebar-menu:hover, .sidebar-menu.active, .sidebar-menu-item:hover, .sidebar-menu-item.active {
+    background: #F0F3F7;
+}
+.sidebar { width: 230px; }
+.sidebar-menu.active::before {
+    content: '';
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    position: absolute;
+    background: var(--bs-primary);
+}
+.sidebar-menu-item { border-radius: 8px 0 0 8px; }
+.sidebar-menu-item.active { font-weight: 500; }
+.sidebar-menu-item ion-icon[name="chevron-up"] { transition: all .3 ease; }
+.sidebar-menu[aria-expanded="false"] ion-icon[name="chevron-up"] {
+    transform: rotateZ(180deg);
+}
+.search-box ion-icon {
+    top: 10px;
+    left: 14px;
+}
+.search-box input {
+    padding-left: 44px;
+    width: 100%;
+    max-width: 300px;
+}
+.required-badge {
+    background: rgb(243, 244, 245);
+    color: rgb(159, 166, 176);
+}
+.text-gray {
+    color: #606060;
+}
+.form-btn {
+    width: 190px;
+}
+.btn-loading:before {
+    display: inline-block;
+    content: "";
+    margin-right: 8px;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    border: .25em solid;
+    border-right-color: transparent;
+    border-radius: 50%;
+    -webkit-animation: spinner-border .75s linear infinite;
+    animation: spinner-border .75s linear infinite;
+}
+.img-selector::-webkit-file-upload-button {
+    visibility: hidden;
+}
+.img-selector {
+    content: '';
+    width: 140px;
+    outline: none;
+    display: flex;
+    cursor: pointer;
+    color: #DBDEE2;
+    aspect-ratio: 1/1;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s ease;
+    -webkit-user-select: none;
+    user-select: none;
+    border: 1px dashed #DBDEE2;
+}
+.img-selector:hover {
+    color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+.img-selector ion-icon {
+    font-size: 32px;
+}
