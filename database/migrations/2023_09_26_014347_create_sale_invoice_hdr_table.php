@@ -16,13 +16,13 @@ return new class extends Migration
             $table->id();
             $table->string('sale_no');
             $table->bigInteger('subtotal');
-            $table->bigInteger('discount');
+            $table->bigInteger('discount')->nullable();
             $table->bigInteger('grandtotal');
             $table->integer('total_qty');
-            $table->string('payment');
-            $table->bigInteger('cash_amount');
-            $table->bigInteger('change_amount');
-            $table->string('status');
+            $table->string('payment')->nullable();
+            $table->bigInteger('cash_amount')->nullable();
+            $table->bigInteger('change_amount')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
