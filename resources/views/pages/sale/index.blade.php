@@ -31,7 +31,7 @@
                             <select id="product-select" class="w-100">
                                 @foreach ($products as $product)
                                     <option value="{{ $product->id }}" data-name="{{ $product->name }}"
-                                            data-code="{{ $product->code }}" data-price="{{ $product->sale_price }}">
+                                            data-code="{{ $product->code }}" data-price="{{ $product->sale_price }}" data-qty="{{ $product->available_qty }}">
                                         {{ $product->code  }} - {{ $product->name }}
                                     </option>
                                 @endforeach
@@ -145,14 +145,14 @@
                 const code = selectedOption.data("code");
                 const name = selectedOption.data("name");
                 const price = selectedOption.data("price");
-                const qty = 1;
+                const qty = selectedOption.data("qty");
 
                 const rowId = "row-" + code;
                 if ($("#" + rowId).length > 0) return;
 
-                const jumlahInput = `<input type="number" name="jumlah" value="1" min="1" id="input-${rowId}">`;
+                const jumlahInput = `<input type="number" name="jumlah" value="1" min="1" max="${qty}" id="input-${rowId}">`;
                 const row = `
-                    <tr id="${rowId}" data-code="${code}" data-name="${name}" data-qty="${qty}" data-price="${price}" data-total-price="${price}">
+                    <tr id="${rowId}" data-code="${code}" data-name="${name}" data-qty="1" data-price="${price}" data-total-price="${price}">
                         <td >${code}</td>
                         <td >${name}</td>
                         <td>${jumlahInput}</td>

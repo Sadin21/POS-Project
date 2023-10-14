@@ -12,7 +12,7 @@ class SaleController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::query()->where('available_qty', '>', 0)->get();
 
         return view('pages.sale.index', compact('products'));
     }
@@ -54,6 +54,10 @@ class SaleController extends Controller
             $line->qty = $cart['qty'];
             $line->subtotal = $product->sale_price * $cart['qty'];
             $line->save();
+
+            $product->update([
+                'available_qty' => $product->available_qty - $cart['qty'],
+            ]);
         }
 
         return to_route('sale.index');
