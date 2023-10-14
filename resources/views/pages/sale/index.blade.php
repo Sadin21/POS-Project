@@ -40,7 +40,7 @@
                         </div>
 
                         <div>
-                            <table class="table">
+                            <table class="table table-striped">
                                 <thead>
                                 <tr>
                                     <th>Kode Barang</th>
@@ -219,7 +219,7 @@
                     url: "{{ route('sale.store') }}",
                     data: { ...requestData, _token: csrfToken },
                     success: function(response) {
-
+                        window.location.href = "{{ route('sale.show', ['sale' => '']) }}" + "/" + response.sale_no;
                     },
                     error: function(error) {
                         alert("Terjadi kesalahan saat menyimpan data.\n" + error.responseText);

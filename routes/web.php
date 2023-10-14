@@ -30,6 +30,7 @@ Route::controller(AuthController::class)->name('auth.')->group(function () {
 Route::controller(SaleController::class)->prefix('sale')->name('sale.')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('/store', 'store')->name('store');
+    Route::get('/{sale?}', 'show')->name('show');
 });
 
 Route::controller(ProductController::class)->prefix('product')->name('product.')->group(function () {

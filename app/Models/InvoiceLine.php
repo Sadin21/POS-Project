@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property mixed $hdr_id
@@ -25,4 +26,9 @@ class InvoiceLine extends Model
         'sale_price',
         'subtotal',
     ];
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
 }

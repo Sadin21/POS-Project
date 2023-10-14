@@ -60,6 +60,15 @@ class SaleController extends Controller
             ]);
         }
 
-        return to_route('sale.index');
+        return response($hdr);
+    }
+
+    public function show(InvoiceHdr $sale = null)
+    {
+        if (!$sale) return redirect()->back();
+
+        $sale->load('lines.product');
+
+        return view('pages.sale.show', compact('sale'));
     }
 }

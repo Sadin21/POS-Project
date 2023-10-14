@@ -35,6 +35,11 @@ class InvoiceHdr extends Model
         'status',
     ];
 
+    public function getRouteKeyName(): string
+    {
+        return 'sale_no';
+    }
+
     public function lines(): HasMany
     {
         return $this->hasMany(InvoiceLine::class, 'hdr_id', 'id');
