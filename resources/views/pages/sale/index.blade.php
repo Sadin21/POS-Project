@@ -177,6 +177,7 @@
 
                 const subtotalElement = $('#text-total-' + rowId)
                 subtotalElement.text(subtotal);
+                calculate();
             });
 
             $(document).on("click", "button[id^='btn-']", function () {
@@ -185,6 +186,7 @@
 
                 // Hapus baris dengan ID yang sesuai dari keranjang
                 $("#" + rowId).remove();
+                calculate();
             });
 
             $("#input-pay").on("keyup", function() {
