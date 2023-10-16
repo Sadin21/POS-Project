@@ -20,13 +20,16 @@ class ProductController extends Controller
     }
 
     public function importExcel(Request $request): RedirectResponse {
-        // Excel::import(new ImportProduct, $request->file('file')->store('temp'));
-        
         request()->validate([
             'file' => 'required|mimes:csv,xls,xlsx'
         ]);
         Excel::import(new ImportProduct, request()->file('file'));
-        return redirect()->back()->with('success', 'Data berhasil diimport');
+
+        try {
+            return redirect()->route('product.index')->with('success', 'Data berhasil diimport');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Data gagal diimport');
+        }
     }
 
     public function store(Request $request): mixed {
