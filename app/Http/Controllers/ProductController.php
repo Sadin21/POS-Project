@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\ImportProduct;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Nette\Utils\Random;
 
 class ProductController extends Controller
@@ -15,6 +17,16 @@ class ProductController extends Controller
     public function index(): View {
         $categories = Category::get();
         return view('pages.master.product.index', compact('categories'));
+    }
+
+    public function importExcel(Request $request): RedirectResponse {
+        // Excel::import(new ImportProduct, $request->file('file')->store('temp'));
+        
+        request()->validate([
+            'file' => 'required|mimes:csv,xls,xlsx'
+        ]);
+        Excel::import(new ImportProduct, request()->file('file'));
+        return redirect()->back()->with('success', 'Data berhasil diimport');
     }
 
     public function store(Request $request): mixed {
@@ -29,7 +41,7 @@ class ProductController extends Controller
             'photo'         => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'sale_price'    => 'required|numeric',
             'qty'           => 'required|numeric',
-            'category_id'   => 'required|numeric',
+            'category_id'   => 'required|numeric|exists:categories,id',
         ]);
 
         $input['available_qty'] = $input['qty'];
@@ -61,7 +73,7 @@ class ProductController extends Controller
             'photo'         => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'sale_price'    => 'required|numeric',
             'qty'           => 'required|numeric',
-            'category_id'   => 'required|numeric',
+            'category_id'   => 'required|numeric|exists:categories,id',
         ]);
 
         $input['available_qty'] = $input['qty'];

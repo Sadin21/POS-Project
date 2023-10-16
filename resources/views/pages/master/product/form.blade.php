@@ -110,7 +110,7 @@
         </form>
     </div>
     <div class="col">
-        <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('product.import') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
             <div class="card border-0 p-4">
@@ -124,7 +124,7 @@
                             <div class="badge text-bg-secondary required-badge fw-medium">Optional</div>
                         </div>
                     </div>
-                    <input type="file" placeholder="" class="form-control" id="photo" name="photo" required value="">
+                    <input type="file" placeholder="" class="form-control" id="file" name="file" required value="">
                 </div>
                 <div class="d-flex align-items-center justify-content-end gap-4 pt-3">
                     <a class="btn form-btn btn-outline-danger text-decoration-none" href="{{ route('product.index') }}">

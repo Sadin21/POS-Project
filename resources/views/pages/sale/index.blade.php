@@ -28,7 +28,7 @@
                         </div> --}}
                         <div class="col-12 mb-4">
                             <label class="form-label" for="item">Produk</label>
-                            <select id="product-select" class="w-100">
+                            <select id="product-select" class="form-control" class="w-100">
                                 @foreach ($products as $product)
                                     <option value="{{ $product->id }}" data-name="{{ $product->name }}"
                                             data-code="{{ $product->code }}" data-price="{{ $product->sale_price }}" data-qty="{{ $product->available_qty }}">
