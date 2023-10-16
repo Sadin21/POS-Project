@@ -174,7 +174,7 @@
                 const rowElement = $('#' + rowId);
                 const subtotal = $(this).val() * rowElement.data("price");
                 rowElement.data('total-price', subtotal);
-                rowElement.data('qty', rowElement.data('qty') + 1);
+                rowElement.data('qty', $(this).val());
 
                 const subtotalElement = $('#text-total-' + rowId)
                 subtotalElement.text(subtotal);
