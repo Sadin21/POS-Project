@@ -126,7 +126,7 @@
         $(document).ready(function () {
             function calculate() {
                 const rowElements = $("#cart tr")
-                const totalProduct = rowElements.length;
+                let totalProduct = 0;
                 let total = 0;
 
                 rowElements.each(function () {
@@ -134,6 +134,7 @@
                     if (!isNaN(totalPrice)) {
                         total += parseFloat(totalPrice);
                     }
+                    totalProduct += parseInt($(this).find("input[name='jumlah']").val());
                 });
 
                 $("#text-total-product").text(totalProduct + " Barang");
