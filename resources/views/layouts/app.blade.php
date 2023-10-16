@@ -28,13 +28,13 @@
             <div class="dropdown">
                 <div class="p-2 user-info d-flex align-items-center gap-2 cursor-pointer rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="{{ asset('assets/icons/person.svg') }}" alt="Profile" width="20px" height="20px" class="rounded-circle p-1">
-                    {{-- <div class="text-truncate f14 user-select-none">{{ $user->name }}</div> --}}
+                    <div class="text-truncate f14 user-select-none">{{ $user->name }}</div>
                 </div>
     
                 <div class="dropdown-menu dropdown-menu-end p-2 border shadow bg-white" id="user-menu" style="width:300px">
                     <div class="d-flex w-100 align-items-center gap-4 px-2 pb-2 mb-2 border-bottom">
                         <div class="flex-grow-1">
-                            {{-- <div class="text-truncate user-select-none fw-medium f20">{{ $user->name }}</div> --}}
+                            <div class="text-truncate user-select-none fw-medium f20">{{ $user->name }}</div>
                             {{-- <div class="d-flex gap-2 align-items-center mt-1">
                                 @if ($user->email_verified_at)
                                     <ion-icon name="checkmark-circle" class="text-success"></ion-icon>

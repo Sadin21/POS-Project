@@ -45,8 +45,10 @@ Route::controller(CategoryController::class)->prefix('category')->name('category
     Route::match(['get', 'post'], '{id}', 'update')->name('update');
 });
 
-Route::controller(UserController::class)->prefix('user')->name('user.')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::match(['get', 'post'], 'store', 'store')->name('store');
-    Route::match(['get', 'post'], '{nip}', 'update')->name('update');
+Route::group(['middleware' => ['auth', 'admin']], function () {
+    Route::controller(UserController::class)->prefix('user')->name('user.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::match(['get', 'post'], 'store', 'store')->name('store');
+        Route::match(['get', 'post'], '{nip}', 'update')->name('update');
+    });
 });

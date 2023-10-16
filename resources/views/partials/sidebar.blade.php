@@ -31,7 +31,9 @@
 </a>
 
 <div class="border-bottom pt-1 mb-1 mx-2"></div>
-<a class="sidebar-menu text-decoration-none text-body position-relative mb-1 d-flex align-items-center gap-2 user-select-none cursor-pointer py-2 px-3 {{ str_contains(Route::currentRouteName(), 'user')? 'active' : '' }}" href="{{ route('user.index') }}">
-    <ion-icon name="person-circle" class="f20"></ion-icon>
-    <div class="fw-medium">Kelola Akun</div>
-</a>
+@if (auth()->user()->role_id === 1)
+    <a class="sidebar-menu text-decoration-none text-body position-relative mb-1 d-flex align-items-center gap-2 user-select-none cursor-pointer py-2 px-3 {{ str_contains(Route::currentRouteName(), 'user')? 'active' : '' }}" href="{{ route('user.index') }}">
+        <ion-icon name="person-circle" class="f20"></ion-icon>
+        <div class="fw-medium">Kelola Akun</div>
+    </a>
+@endif
