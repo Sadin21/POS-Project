@@ -79,7 +79,7 @@
                         </div>
                         <div class="d-flex justify-content-between mt-3">
                             <h6>Kasir</h6>
-                            <h6>Daffa</h6>
+                            <h6>{{ auth()->user()->name }}</h6>
                         </div>
                     </div>
                     <div class="d-flex flex-column rounded-2 p-3 pb-3 my-3 border-bottom border-top">
@@ -96,9 +96,8 @@
                             <h5>Bayar</h5>
                         </div>
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">Rp</span>
-                            <input type="text" class="form-control" placeholder="Username" aria-label="Username"
-                                   aria-describedby="basic-addon1" id="input-pay">
+                            <span class="input-group-text">Rp</span>
+                            <input type="text" class="form-control" id="input-pay">
                         </div>
                     </div>
                     <div class="d-flex flex-column rounded-2 px-3 pb-3 border-bottom">
@@ -106,9 +105,8 @@
                             <h5>Sisa</h5>
                         </div>
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">Rp</span>
-                            <input type="text" class="form-control" placeholder="Username" aria-label="Username"
-                                   aria-describedby="basic-addon1" id="input-return">
+                            <span class="input-group-text">Rp</span>
+                            <input type="text" class="form-control" id="input-return">
                         </div>
                     </div>
                     <button type="button" class="btn btn-primary mt-3" id="btn-save">Bayar</button>

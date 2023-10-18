@@ -53,7 +53,18 @@
                             <div class="badge text-bg-primary required-badge fw-medium">Wajib</div>
                         </div>
                     </div>
-                    <input type="file" placeholder="" class="form-control" id="photo" name="photo" {{ $mode === 'store' ?? 'required' }} value="">
+                    {{-- <input type="file" placeholder="" class="form-control" id="photo" name="photo" {{ $mode === 'store' ?? 'required' }} value=""> --}}
+                    <div class="flex-grow-1 d-flex gap-3">
+                        <div>
+                            <input type="file" name="photo" id="photo" class="d-none" />
+                            <label for="photo" class="img-selector pc-logo">
+                                <ion-icon name="add"></ion-icon>
+                            </label>
+                        </div>
+                        <div id="img-preview" style="width: 135px; height: 60px">
+                            <img src="/assets/imgs/{{ isset($user) ? $user->photo : '' }}" class="img-fluid border border-2 border-primary rounded" alt="">
+                        </div>
+                    </div>
                 </div>
         
                 <div class="d-flex pb-5 gap-5">
@@ -155,6 +166,29 @@
             }).join("");
 
             codeInput.value = randomCode;
+        }
+    </script>
+    <script>
+        const chooseFile = document.getElementById("photo");
+        const imgPreview = document.getElementById("img-preview");
+    
+        chooseFile.addEventListener("change", function () {
+            getImgData();
+        });
+    
+        function getImgData() {
+            const files = chooseFile.files[0];
+            if (files) {
+                const fileReader = new FileReader();
+                fileReader.readAsDataURL(files);
+                fileReader.addEventListener("load", function () {
+                    let imgElement = document.createElement("img");
+                    imgElement.setAttribute("src", this.result);
+                    imgElement.setAttribute("class", "img-fluid border border-2 border-primary rounded");
+                    imgPreview.innerHTML = "";
+                    imgPreview.appendChild(imgElement);
+                });
+            }
         }
     </script>
 @endsection

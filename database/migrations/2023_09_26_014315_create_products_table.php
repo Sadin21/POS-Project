@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('sale_price')->nullable();
             $table->integer('qty')->nullable();
             $table->integer('available_qty')->nullable();
-            $table->foreignId('category_id')->constrained('categories');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->timestamps();
 
             // BlameableObserver::blameableSchema($table);

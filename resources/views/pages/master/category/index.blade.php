@@ -65,8 +65,8 @@
 
 <script>
     gridOptions.columnDefs = [
-        { field: 'name', headerName: 'Nama', editable: true },
-        { headerName: 'Jumlah Barang', default: 0 },
+        { field: 'name', headerName: 'Nama' },
+        { field: 'qty', headerName: 'Jumlah Barang', default: 0 },
         { field: 'created_at', headerName: 'Tanggal Buat', valueFormatter: ({ value }) => formatDateTime(value), sort: 'desc' },
         { field: 'action', headerName: 'Aksi', minWidth: 200, sortable: false, cellRenderer: AgGridDefaultBtn, cellRendererParams: {
             canUpdate: true,
@@ -106,5 +106,4 @@
 
     document.addEventListener('DOMContentLoaded', () => (new agGrid.Grid(document.getElementById('grid'), gridOptions)));
 </script>
-
 @endsection

@@ -30,7 +30,7 @@ class CategoryController extends Controller
         }
     }
 
-    public function update(Request $request, string $id) {
+    public function update(Request $request, string $id): View | RedirectResponse {
         $mode = 'update';
 
         $category = Category::find($id);
@@ -58,6 +58,14 @@ class CategoryController extends Controller
         return response()->json([ 'message' => 'Data berhasil dihapus' ]);
     }
 
+    // public function destroy(Request $request): JsonResponse{
+    //     $product = Product::find($request->id);
+    //     if (!$product) return response()->json([ 'message' => 'Data tidak ditemukan' ], 404);
+
+    //     $product->delete();
+    //     return response()->json([ 'message' => 'Data berhasil dihapus' ]);
+    // }
+
     public function query(Request $request): JsonResponse {
         $limit = $request->limit;
         $offset = $request->offset;
@@ -65,7 +73,8 @@ class CategoryController extends Controller
         $order = $request->order?? 'desc';
         $orderBy = $request->orderBy?? 'created_at';
 
-        $category = Category::select('id', 'name', 'created_at', 'updated_at')
+        $category = Category::leftJoin('products', 'products.category_id', '=', 'categories.id')
+            ->select('categories.id as category_id', 'categories.name', 'products.available_qty as qty', 'categories.created_at', 'categories.updated_at')
             ->orderBy($orderBy, $order);
 
         if ($limit && is_numeric($limit))   $category->limit($limit);

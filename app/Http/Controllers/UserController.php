@@ -64,6 +64,7 @@ class UserController extends Controller
             'phone'         => 'nullable|string',
             'photo'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'role_id'       => 'required|exists:roles,role_id',
+            'password'      => 'nullable|string',
         ]);
 
         if ($request->file('photo')) {

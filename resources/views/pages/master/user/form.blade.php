@@ -69,7 +69,6 @@
                             <div class="badge text-bg-secondary required-badge fw-medium">Opsional</div>
                         </div>
                     </div>
-                    {{-- <input type="file" placeholder="" class="form-control" id="photo" name="photo" {{ $mode === 'store' ?? 'required' }} value=""> --}}
                     <div class="flex-grow-1 d-flex gap-3">
                         <div>
                             <input type="file" name="photo" id="photo" class="d-none" />
@@ -120,13 +119,26 @@
                             </div>
                         </div>
                         <select class="form-select" name="role_id">
-                            {{-- <option value="">Pilih Kategori Barang</option> --}}
                             @foreach ($roles as $r)
-                                <option value="{{ $r->role_id }}">{{ $r->name }} {{ isset($user) && $user->role_id === $r->name ? 'selected' : '' }}</option>
-                                {{-- <option value="{{ $r->role_id }}">{{ $r->name }}</option> --}}
+                            <option value="{{ $r->role_id }}" {{ (isset($user) && $user->role_id == $r->role_id) ? 'selected' : '' }}>
+                                {{ $r->name }}
+                            </option>>
                             @endforeach
                         </select>
                     </div>
+
+                    @if ($mode == 'update')
+                    <div class="d-flex pb-5 gap-5" style="width: 100%">
+                        <div class="w-25 flex-shrink-0">
+                            <div class="align-items-center gap-2">
+                                <div class="fw-medium text-gray">Ubah Password</div>
+                
+                                <div class="badge text-bg-secondary required-badge fw-medium">Opsional</div>
+                            </div>
+                        </div>
+                        <input type="text" placeholder="Masukkan Password Baru" class="form-control" id="password" name="password" required value="">
+                    </div> 
+                    @endif
                 </div>
 
                 <div class="d-flex-align-items-end">

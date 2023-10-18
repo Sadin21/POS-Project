@@ -48,10 +48,10 @@
                         <img src="{{ asset('assets/icons/person.svg') }}" alt="Profile" width="50px" height="50px" class="rounded-circle p-1 flex-shrink-0">
                     </div>
 
-                    <a class="w-100 dropdown-item d-flex align-items-center gap-2 p-2 mb-1 rounded cursor-pointer" href="">
+                    {{-- <a class="w-100 dropdown-item d-flex align-items-center gap-2 p-2 mb-1 rounded cursor-pointer" href="">
                         <ion-icon name="settings" class="f20 flex-shrink-0"></ion-icon>
                         <div class="user-select-none fw-medium flex-grow-1">Ubah kata sandi</div>
-                    </a>
+                    </a> --}}
 
                     <a class="w-100 dropdown-item d-flex align-items-center gap-2 p-2 rounded cursor-pointer" href="{{ route('auth.logout') }}">
                         <ion-icon name="log-out" class="f20 flex-shrink-0 text-danger"></ion-icon>
