@@ -35,8 +35,8 @@
         { field: 'name', headerName: 'Nama Barang' },
         { field: 'category_id', headerName: 'Kategori Barang' },
         { field: 'sale_price', headerName: 'Harga' },
-        { field: 'available_qty', headerName: 'Stok Barang' },
-        { field: 'qty', headerName: 'Jumlah Barang'},
+        { field: 'qty', headerName: 'Stok Total'},
+        { field: 'available_qty', headerName: 'Stok Barang Tersedia' },
         { field: 'created_at', headerName: 'Tanggal Buat', valueFormatter: ({ value }) => formatDateTime(value), sort: 'desc' },
         { field: 'action', headerName: 'Aksi', minWidth: 200, sortable: false, cellRenderer: AgGridDefaultBtn, cellRendererParams: {
             canUpdate: true,

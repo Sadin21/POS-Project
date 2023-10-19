@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -58,14 +59,6 @@ class CategoryController extends Controller
         return response()->json([ 'message' => 'Data berhasil dihapus' ]);
     }
 
-    // public function destroy(Request $request): JsonResponse{
-    //     $product = Product::find($request->id);
-    //     if (!$product) return response()->json([ 'message' => 'Data tidak ditemukan' ], 404);
-
-    //     $product->delete();
-    //     return response()->json([ 'message' => 'Data berhasil dihapus' ]);
-    // }
-
     public function query(Request $request): JsonResponse {
         $limit = $request->limit;
         $offset = $request->offset;
@@ -73,9 +66,14 @@ class CategoryController extends Controller
         $order = $request->order?? 'desc';
         $orderBy = $request->orderBy?? 'created_at';
 
-        $category = Category::leftJoin('products', 'products.category_id', '=', 'categories.id')
-            ->select('categories.id as category_id', 'categories.name', 'products.available_qty as qty', 'categories.created_at', 'categories.updated_at')
-            ->orderBy($orderBy, $order);
+        // $category = Category::leftJoin('products', 'products.category_id', '=', 'categories.id')
+        //     ->select('categories.id as category_id', 'categories.name', 'products.available_qty as qty', 'categories.created_at', 'categories.updated_at')
+        //     ->orderBy($orderBy, $order);
+
+        $category = Product::leftJoin('categories', 'categories.id', '=', 'products.category_id')
+            ->selectRaw('categories.id as category_id, categories.name, SUM(products.available_qty) as qty, categories.created_at, categories.updated_at')
+            ->groupBy('categories.id')
+            ->orderBy('categories.created_at', 'desc');
 
         if ($limit && is_numeric($limit))   $category->limit($limit);
         if ($offset && is_numeric($offset)) $category->offset($offset);
