@@ -2,9 +2,11 @@
 @section('title', 'Transaksi')
 
 @section('style')
-    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+    {{--    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">--}}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @endsection
 
 @section('content')
@@ -31,7 +33,8 @@
                             <select id="product-select" class="form-control" class="w-100">
                                 @foreach ($products as $product)
                                     <option value="{{ $product->id }}" data-name="{{ $product->name }}"
-                                            data-code="{{ $product->code }}" data-price="{{ $product->sale_price }}" data-qty="{{ $product->available_qty }}">
+                                            data-code="{{ $product->code }}" data-price="{{ $product->sale_price }}"
+                                            data-qty="{{ $product->available_qty }}">
                                         {{ $product->code  }} - {{ $product->name }}
                                     </option>
                                 @endforeach
@@ -188,17 +191,17 @@
                 calculate();
             });
 
-            $("#input-pay").on("keyup", function() {
+            $("#input-pay").on("keyup", function () {
                 const newValue = $(this).val();
                 const returnValue = newValue - $("#text-total").text();
                 if (returnValue < 0 || $("#cart tr").length < 1) return;
                 $("#input-return").val(returnValue);
             });
 
-            $("#btn-save").on("click", function() {
+            $("#btn-save").on("click", function () {
                 const dataCart = [];
 
-                $("#cart tr").each(function() {
+                $("#cart tr").each(function () {
                     const row = $(this);
                     const code = row.data("code");
                     const qty = row.data("qty");
@@ -218,14 +221,31 @@
                 $.ajax({
                     type: "POST",
                     url: "{{ route('sale.store') }}",
-                    data: { ...requestData, _token: csrfToken },
-                    success: function(response) {
+                    data: {...requestData, _token: csrfToken},
+                    success: function (response) {
                         window.location.href = "{{ route('sale.show', ['sale' => '']) }}" + "/" + response.sale_no;
                     },
-                    error: function(error) {
+                    error: function (error) {
                         alert("Terjadi kesalahan saat menyimpan data.\n" + error.responseText);
                     }
                 });
+            });
+
+            $('#product-select').select2({
+                allowClear: true,
+                placeholder: 'Pilih Produk',
+                ajax: {
+                    delay: 250,
+                    url: `{{ route('product.query') }}`,
+                    data: ({term}) => ({keyword: term, limit: 20, offset: 0, order: 'ASC', orderBy: 'name'}),
+                    processResults: ({data}) => ({
+                        results: $.map(data, ({id, name, code, sell_price}) => ({
+                            id: id,
+                            text: `${code} - ${name}`,
+                            name, code, sell_price
+                        }))
+                    })
+                }
             });
         });
 
@@ -282,25 +302,6 @@
         {{--}--}}
 
         {{--document.addEventListener('DOMContentLoaded', () => (new agGrid.Grid(document.getElementById('grid'), gridOptions)));--}}
-
-        {{--$(document).ready(function() {--}}
-        {{--    $('#product-select').select2({--}}
-        {{--        allowClear: true,--}}
-        {{--        placeholder: 'Pilih Produk',--}}
-        {{--        ajax: {--}}
-        {{--            delay: 250,--}}
-        {{--            url: `{{ route('product.query') }}`,--}}
-        {{--            data: ({ term }) => ({ keyword: term, limit: 20, offset: 0, order: 'ASC', orderBy: 'name' }),--}}
-        {{--            processResults: ({ data }) => ({--}}
-        {{--                results: $.map(data, ({ id, name, barcode, sell_price }) => ({--}}
-        {{--                    id: id,--}}
-        {{--                    text: name,--}}
-        {{--                    name, barcode, sell_price--}}
-        {{--                }))--}}
-        {{--            })--}}
-        {{--        }--}}
-        {{--    });--}}
-        {{--});--}}
     </script>
 
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
