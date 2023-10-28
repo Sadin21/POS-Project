@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\TransactionReportController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,12 @@ Route::controller(ProductController::class)->prefix('product')->name('product.')
 });
 
 Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('store', 'store')->name('store');
+    Route::match(['get', 'post'], '{id}', 'update')->name('update');
+});
+
+Route::controller(TransactionReportController::class)->prefix('transaction')->name('transaction.')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::post('store', 'store')->name('store');
     Route::match(['get', 'post'], '{id}', 'update')->name('update');
