@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
-use LaravelDaily\LaravelCharts\Classes\LaravelChart;
+// use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
 
 class TransactionReportController extends Controller
 {
@@ -34,5 +37,55 @@ class TransactionReportController extends Controller
         $data = $users->values();
 
         return view('pages.master.report.index', compact('labels', 'data'));
+    }
+
+    public function downloadPage(): View {
+        return view('pages.master.report.download-page');
+    }
+
+    // public function generatePdf() {
+
+    //     $sales = DB::table('sale_invoice_hdr')->get();
+
+    //     $data = [
+    //         'saleData' -> $sales
+    //     ];
+
+    //     // $pdf = PDF::loadView('pages.master.report.pdf-view', $data);
+    //     PDFGenerate::create($data);
+
+    //     return $pdf->download('report.pdf');
+    // }
+
+    public function generatePdf() {
+        $data = DB::table('sale_invoice_hdr')->get()->toArray();
+        $pdf = PDF::loadView('pages.master.report.pdf-view', ['data' => $data]);
+
+        return $pdf->download('report.pdf');
+    }
+
+    public function query(Request $request): JsonResponse {
+        $limit = $request->limit;
+        $offset = $request->offset;
+        $keyword = $request->keyword;
+        $order = $request->order?? 'desc';
+        $orderBy = $request->orderBy?? 'created_at';
+
+        $sale = DB::table('sale_invoice_hdr')->orderBy($orderBy, $order);
+
+        if ($limit && is_numeric($limit))   $sale->limit($limit);
+        if ($offset && is_numeric($offset)) $sale->offset($offset);
+        if ($keyword) {
+            $sale->where(function ($u) use ($keyword) {
+                $u->where('name', 'LIKE', '%'. $keyword . '%')
+                ->orWhere('code', 'LIKE', '%'. $keyword . '%');
+            });
+        }
+
+        return response()->json([
+            'totalRecords' => $sale->count(),
+            'data' => $sale->get(),
+            'message' => 'Success'
+        ], 200);
     }
 }

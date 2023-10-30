@@ -49,6 +49,8 @@ Route::controller(CategoryController::class)->prefix('category')->name('category
 
 Route::controller(TransactionReportController::class)->prefix('transaction')->name('transaction.')->group(function () {
     Route::get('/', 'index')->name('index');
+    Route::get('/download', 'downloadPage')->name('download');
+    Route::get('/download/pdf', 'generatePdf')->name('pdf');
     Route::post('store', 'store')->name('store');
     Route::match(['get', 'post'], '{id}', 'update')->name('update');
 });

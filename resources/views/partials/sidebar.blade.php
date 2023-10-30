@@ -25,10 +25,28 @@
     </a>
 </div>
 
-<a class="sidebar-menu text-decoration-none text-body position-relative mb-1 d-flex align-items-center gap-2 user-select-none cursor-pointer py-2 px-3 {{ str_contains(Route::currentRouteName(), 'transaksi')? 'active' : '' }}" href="{{ route('transaction.index') }}">
-    <ion-icon name="home" class="f20"></ion-icon>
-    <div class="fw-medium">Kelola Transaksi</div>
-</a>
+<div class="sidebar-menu position-relative mb-1 d-flex align-items-center justify-content-between gap-2 user-select-none cursor-pointer py-2 px-3" data-bs-toggle="collapse" data-bs-target="#product-item" aria-expanded="true" aria-controls="product-item">
+    <div class="d-flex align-items-center gap-2">
+        <ion-icon name="cube" class="f20"></ion-icon>
+        <div class="fw-medium">Laporan Penjualan</div>
+    </div>
+    
+    <ion-icon name="chevron-up" class="f20"></ion-icon>
+</div>
+<div class="collapse show ps-4" id="product-item">
+    {{-- <a class="sidebar-menu-item text-decoration-none text-body d-block px-2 py-1 f14 mb-1 user-select-none cursor-pointer">
+        Tambah Produk
+    </a> --}}
+
+    <a class="sidebar-menu-item text-decoration-none text-body d-block px-2 py-1 f14 mb-1 user-select-none cursor-pointer {{ str_contains(Route::currentRouteName(), 'transaksi')? 'active' : '' }}" href="{{ route('transaction.index') }}">
+        Chart Penjualan
+    </a>
+
+    <a class="sidebar-menu-item text-decoration-none text-body d-block px-2 py-1 f14 mb-1 user-select-none cursor-pointer {{ str_contains(Route::currentRouteName(), 'transaksi')? 'active' : '' }}" href="{{ route('transaction.download') }}">
+        Dowload Laporan
+    </a>
+</div>
+
 
 <div class="border-bottom pt-1 mb-1 mx-2"></div>
 @if (auth()->user()->role_id === 1)
