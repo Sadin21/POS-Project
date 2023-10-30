@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SaleInvoiceHdr;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
@@ -9,7 +10,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 // use Barryvdh\DomPDF\Facade\Pdf;
-use PDF;
 
 class TransactionReportController extends Controller
 {
@@ -29,7 +29,7 @@ class TransactionReportController extends Controller
 
     public function index(): View {
         $users = User::select(DB::raw("COUNT(*) as count"))
-            ->whereYear('created_at', date('Y'))
+            ->whereYear ('created_at', date('Y'))
             ->groupBy(DB::raw("Month(created_at)"))
             ->pluck('count');
 
@@ -43,25 +43,11 @@ class TransactionReportController extends Controller
         return view('pages.master.report.download-page');
     }
 
-    // public function generatePdf() {
-
-    //     $sales = DB::table('sale_invoice_hdr')->get();
-
-    //     $data = [
-    //         'saleData' -> $sales
-    //     ];
-
-    //     // $pdf = PDF::loadView('pages.master.report.pdf-view', $data);
-    //     PDFGenerate::create($data);
-
-    //     return $pdf->download('report.pdf');
-    // }
-
     public function generatePdf() {
-        $data = DB::table('sale_invoice_hdr')->get()->toArray();
-        $pdf = PDF::loadView('pages.master.report.pdf-view', ['data' => $data]);
-
-        return $pdf->download('report.pdf');
+        $mpdf = new \Mpdf\Mpdf();
+        $data = SaleInvoiceHdr::orderBy('created_at', 'desc')->get();
+        $mpdf->WriteHTML(view('pages.master.report.pdf-view', ['data' => $data]));
+        $mpdf->Output('test.pdf', 'D');
     }
 
     public function query(Request $request): JsonResponse {
