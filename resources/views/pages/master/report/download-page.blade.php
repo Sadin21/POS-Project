@@ -6,6 +6,11 @@
     <div class="d-flex justify-content-between align-items-center flex-shrink-0 gap-4">
         <h4 class="m-0">Laporan Pembelian</h4>
 
+        <form method="get" action="{{ route('transaction.download') }}">
+            <input type="date" name="start_date" required>
+            <input type="date" name="end_date" required>
+            <button type="submit">Filter</button>
+        </form>
         <a class="btn btn-primary d-flex align-items-center gap-2 btn-sm" href="{{ route('transaction.pdf') }}">
             {{-- <ion-icon name="add" class="f24"></ion-icon> --}}
             Download Laporan
