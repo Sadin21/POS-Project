@@ -1,4 +1,8 @@
-body { height: 100vh; }
+body { 
+    height: 100vh;
+    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
+}
 img[alt="Profile"] { background: #6D7588; }
 .f12 { font-size: 12px; }
 .f14 { font-size: 14px; }

@@ -15,6 +15,10 @@
         <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+
         @yield('style')
         <style>
             body.swal2-height-auto { height: 100vh !important; }
@@ -22,7 +26,7 @@
     </head>
 
     <body class="d-flex flex-column">
-        <nav class="flex-shrink-0 navbar navbar-light bg-white py-3 px-4 border-bottom shadow-sm d-flex justify-content-between align-items-center">
+        <nav class="flex-shrink-0 navbar navbar-light bg-white py-3 px-4 border-bottom shadow-sm d-flex justify-content-between align-items-center fixed-top z-1 position-absolute">
             <img src="{{ asset('assets/imgs/logo.png') }}" height="40" alt="FaaFoo Logo" loading="lazy" />
 
             <div class="dropdown">
@@ -62,11 +66,11 @@
         </nav>
 
         <div class="flex-grow-1 d-flex">
-            <div class="sidebar bg-white overflow-auto flex-shrink-0 h-100 border-end py-2">
+            <div class="sidebar bg-white flex-shrink-0 border-end fixed-top z-0 position-absolute" style="padding-top: 100px; height: 100%">
                 @include('partials.sidebar')
             </div>
 
-            <main class="flex-grow-1 p-4 overflow-auto">
+            <main class="flex-grow-1 p-4 overflow-auto position-relative" style="margin-left: 250px; margin-top: 70px">
                 @yield('content')
             </main>
         </div>

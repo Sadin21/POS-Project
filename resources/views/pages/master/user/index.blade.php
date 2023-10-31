@@ -2,27 +2,25 @@
 @section('title', 'User')
 
 @section('content')
-<div class="d-flex flex-column gap-4 h-100">
+<div class="d-flex justify-content-between align-items-center flex-shrink-0 gap-4 align-content-center">
+    <h4 class="m-0">Daftar Akun</h4>
+    <a class="btn btn-primary d-flex align-items-center gap-2" href="{{ route('user.store') }}">
+        <ion-icon name="add" class="f24"></ion-icon>
+        Tambah Akun
+    </a>
+</div>
+<div class="card border-0 flex-grow-1 d-flex flex-column h-100 mt-4" id="table">
     <div class="d-flex justify-content-between align-items-center flex-shrink-0 gap-4">
-        <h4 class="m-0">Daftar Akun</h4>
-
-        <a class="btn btn-primary d-flex align-items-center gap-2 btn-sm" href="{{ route('user.store') }}">
-            <ion-icon name="add" class="f24"></ion-icon>
-            Tambah User
-        </a>
-    </div>
-
-    <div class="card border-0 flex-grow-1 d-flex flex-column h-100">
         <div class="border-bottom px-4 pt-4 pb-3 flex-shrink-0">
             <div class="position-relative search-box">
                 <ion-icon name="search" class="f24 position-absolute"></ion-icon>
                 <input type="text" id="filter-text-box" class="form-control" placeholder="Ketik untuk mencari..." onchange="search()">
             </div>
         </div>
+    </div>
 
-        <div class="p-1 flex-grow-1">
-            <div id="grid" class="ag-theme-alpine h-100"></div>
-        </div>
+    <div class="p-1 flex-grow-1 mt-4">
+        <div id="grid" class="ag-theme-alpine h-100"></div>
     </div>
 </div>
 
