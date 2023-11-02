@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Nette\Utils\Random;
+use Psy\Readline\Hoa\Console;
 
 class CategoryController extends Controller
 {
@@ -23,6 +24,7 @@ class CategoryController extends Controller
         ]);
 
         try {
+            // dd($input);
             Category::create($input);
 
             return redirect()->route('category.index')->with('success', 'Kategori berhasil ditambahkan');
@@ -51,6 +53,15 @@ class CategoryController extends Controller
         }
     }
 
+    // public function destroy(Request $request): JsonResponse{
+    //     dd($request->all());
+    //     $category = Category::find($request->id);
+    //     if (!$category) return response()->json([ 'message' => 'Data tidak ditemukan' ], 404);
+
+    //     $category->delete();
+    //     return response()->json([ 'message' => 'Data berhasil dihapus' ]);
+    // }
+
     public function destroy(Request $request): JsonResponse{
         $category = Category::find($request->id);
         if (!$category) return response()->json([ 'message' => 'Data tidak ditemukan' ], 404);
@@ -70,10 +81,19 @@ class CategoryController extends Controller
         //     ->select('categories.id as category_id', 'categories.name', 'products.available_qty as qty', 'categories.created_at', 'categories.updated_at')
         //     ->orderBy($orderBy, $order);
 
-        $category = Product::leftJoin('categories', 'categories.id', '=', 'products.category_id')
-            ->selectRaw('categories.id as category_id, categories.name, SUM(products.available_qty) as qty, categories.created_at, categories.updated_at')
-            ->groupBy('categories.id')
-            ->orderBy('categories.created_at', 'desc');
+        $category = Category::leftJoin('products', 'categories.id', '=', 'products.category_id')
+        ->selectRaw('categories.id as category_id, categories.name, 
+            IFNULL(SUM(products.available_qty), 0) as qty, 
+            categories.created_at, categories.updated_at')
+        ->groupBy('categories.id')
+        ->orderBy('categories.created_at', 'desc');
+
+        // $category = Category::leftJoin('products', 'products.category_id', '=', 'categories.id')
+        //     ->selectRaw('categories.id as category_id, categories.name, categories.created_at, categories.updated_at')
+        //     ->groupBy('categories.id')
+        //     ->orderBy('categories.created_at', 'desc');
+
+        // $data['category'] = $category->get();
 
         if ($limit && is_numeric($limit))   $category->limit($limit);
         if ($offset && is_numeric($offset)) $category->offset($offset);

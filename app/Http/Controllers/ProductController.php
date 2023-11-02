@@ -66,6 +66,7 @@ class ProductController extends Controller
         $mode = 'update';
         $categories = Category::get();
         $product = Product::find($id);
+        // dd($product);
         if (!$product) return redirect()->back()->with('error', 'Data tidak ditemukan');
 
         if ($request->getMethod() === 'GET') return view('pages.master.product.form', compact('mode', 'categories', 'product'));
@@ -90,6 +91,7 @@ class ProductController extends Controller
 
         try {
             $product->fill($input)->save();
+            if ($mode === 'update') return redirect()->route('product.index')->with('success', 'Data barang berhasil diperbarui');
             return redirect()->route('product.index')->with('success', 'Barang berhasil ditambahkan');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Barang gagal ditambahkan');

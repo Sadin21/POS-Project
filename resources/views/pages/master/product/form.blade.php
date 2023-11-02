@@ -61,7 +61,7 @@
                                     </label>
                                 </div>
                                 <div id="img-preview" style="width: 135px; height: 60px">
-                                    <img src="/assets/imgs/{{ isset($user) ? $user->photo : '' }}" class="img-fluid border border-2 border-primary rounded" alt="">
+                                    <img src="/assets/imgs/{{ isset($product) ? $product->photo : '' }}" class="img-fluid border border-2 border-primary rounded" alt="">
                                 </div>
                             </div>
                         </div>
