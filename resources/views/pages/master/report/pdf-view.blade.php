@@ -35,12 +35,12 @@
         @foreach($data as $data)
         <tr>
             <td>{{ $data->sale_no }}</td>
-            <td>{{ $data->subtotal }}</td>
-            <td>{{ $data->grandtotal }}</td>
+            <td>Rp. {{ number_format($data->subtotal, 0, ',', '.') }}</td>
+            <td>Rp. {{ number_format($data->grandtotal, 0, ',', '.') }}</td>
             <td>{{ $data->total_qty }}</td>
             <td>{{ $data->discount }}</td>
             <td>{{ $data->payment }}</td>
-            <td>{{ $data->cash_amount }}</td>
+            <td>Rp. {{ number_format($data->cash_amount, 0, ',', '.') }}</td>
             <td>{{ $data->created_at }}</td>
         </tr>
         @endforeach

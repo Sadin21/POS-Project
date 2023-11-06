@@ -24,7 +24,7 @@
     </div>
 </div>
 
-@include('partials.ag-grid.aggrid')
+@include('partials.ag-grid.aggrid-product')
 @include('partials.ag-grid.aggrid-default-btn')
 
 <script>
@@ -32,7 +32,8 @@
         { field: 'code', headerName: 'Kode Barang' },
         { field: 'name', headerName: 'Nama Barang' },
         { field: 'category_id', headerName: 'Kategori Barang' },
-        { field: 'sale_price', headerName: 'Harga' },
+        { field: 'photo', headerName: 'Foto', cellRenderer: ImageCellRenderer },
+        { field: 'sale_price', headerName: 'Harga', cellRenderer: ({ value }) => formatPrice(value) },
         { field: 'qty', headerName: 'Stok Total'},
         { field: 'available_qty', headerName: 'Stok Barang Tersedia' },
         { field: 'created_at', headerName: 'Tanggal Buat', valueFormatter: ({ value }) => formatDateTime(value), sort: 'desc' },

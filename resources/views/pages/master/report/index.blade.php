@@ -112,12 +112,12 @@
   <script>
       gridOptions.columnDefs = [
           { field: 'sale_no', headerName: 'Nomor Pembelian' },
-          { field: 'subtotal', headerName: 'Subtotal' },
-          { field: 'grandtotal', headerName: 'Grandtotal' },
+          { field: 'subtotal', headerName: 'Subtotal', cellRenderer: ({ value }) => formatPrice(value) },
+          { field: 'grandtotal', headerName: 'Grandtotal', cellRenderer: ({ value }) => formatPrice(value) },
           { field: 'total_qty', headerName: 'Total Barang' },
           { field: 'discount', headerName: 'Discount' },
           { field: 'payment', headerName: 'Pembayaran' }, 
-          { field: 'cash_amount', headerName: 'Uang Dibayar'},
+          { field: 'cash_amount', headerName: 'Uang Dibayar', cellRenderer: ({ value }) => formatPrice(value)},
           { field: 'status', headerName: 'Status'},
           { field: 'created_at', headerName: 'Tanggal Pembelian', valueFormatter: ({ value }) => formatDateTime(value), sort: 'desc' },
       ];

@@ -16,38 +16,6 @@ class TransactionReportController extends Controller
 {
     public function index(Request $request): View
     {
-        // $sales = SaleInvoiceHdr::query()
-        //     ->select(
-        //         DB::raw("COUNT(*) as count"),
-        //         DB::raw("YEAR(created_at) as year"),
-        //         DB::raw("MONTH(created_at) as month")
-        //     )
-        //     ->whereYear('created_at', date('Y'));
-        // if ($request->start_date != null && $request->end_date != null) {
-        //     $startDate = Carbon::parse($request->start_date)->format('Y-m-d') ?? null;
-        //     $endDate = Carbon::parse($request->end_date)->format('Y-m-d') ?? null;
-
-        //     $sales->whereDate('created_at', '>=', $startDate)
-        //         ->whereDate('created_at', '<=', $endDate);
-        // }
-
-        // dd($sales);
-
-        // $sales = $sales->groupBy('year', 'month')
-        //     ->orderBy('year', 'asc')
-        //     ->orderBy('month', 'asc')
-        //     ->get();
-        // $labels = [];
-        // $data = [];
-
-        // foreach ($sales as $sale) {
-        //     $labels[] = $sale->date;
-        //     // $labels[] = Carbon::parse("1" . "-" . $sale->month . "-" . $sale->year)->format('M-Y');
-        //     $data[] = $sale->count;
-        // }
-
-
-        // INI YANG LAMA
         $startDate = $request->input('start_date') ?? null;
         $endDate = $request->input('end_date') ?? null;
 
@@ -77,15 +45,8 @@ class TransactionReportController extends Controller
             $data[] = $sale->count; 
         };
 
-        // dd($labels, $data);
-
         return view('pages.master.report.index', compact('labels', 'data'));
     }
-
-    // public function downloadPage(): View
-    // {
-    //     return view('pages.master.report.download-page');
-    // }
 
     public function generatePdf(Request $request)
     {
