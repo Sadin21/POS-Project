@@ -22,11 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function () {
-    Route::get('query', 'query')->name('query');
-    Route::post('delete', 'destroy')->name('delete');
-});
-
 Route::controller(ProductController::class)->prefix('product')->name('product.')->group(function () {
     Route::get('query', 'query')->name('query');
     Route::post('delete', 'destroy')->name('delete');
@@ -38,6 +33,11 @@ Route::controller(UserController::class)->prefix('user')->name('user.')->group(f
 });
 
 Route::controller(TransactionReportController::class)->prefix('report')->name('report.')->group(function () {
+    Route::get('query', 'query')->name('query');
+    Route::post('delete', 'destroy')->name('delete');
+});
+
+Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function () {
     Route::get('query', 'query')->name('query');
     Route::post('delete', 'destroy')->name('delete');
 });
