@@ -85,4 +85,14 @@ class CategoryController extends Controller
             'message' => 'Success'
         ], 200);
     }
+
+    public function getDetailProduct(Request $request): JsonResponse {
+        $products = Product::where('category_id', $request->id)->get();
+    
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+    
+        return response()->json(['products' => $products, 'message' => 'Success'], 200);
+    }
 }

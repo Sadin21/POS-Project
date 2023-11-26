@@ -69,8 +69,10 @@
         { field: 'name', headerName: 'Nama Barang' },
         { field: 'created_at', headerName: 'Tanggal Buat', valueFormatter: ({ value }) => formatDateTime(value), sort: 'desc' },
         { field: 'action', headerName: 'Aksi', minWidth: 200, sortable: false, cellRenderer: AgGridDefaultBtn, cellRendererParams: {
+            canShowDetail: true,
             canUpdate: true,
             canDelete: true,
+            detailUrl: `{{ route('category.detail-product', 'id') }}`,
             updateUrl: `{{ route('category.update', 'id') }}`,
             deleteUrl: `{{ route('category.delete') }}`,
         }}

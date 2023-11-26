@@ -40,4 +40,5 @@ Route::controller(TransactionReportController::class)->prefix('report')->name('r
 Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function () {
     Route::get('query', 'query')->name('query');
     Route::post('delete', 'destroy')->name('delete');
+    Route::get('/detail-product/{id}', 'getDetailProduct')->name('detail-product');
 });
