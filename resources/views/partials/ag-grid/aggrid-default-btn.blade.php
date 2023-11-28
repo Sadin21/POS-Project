@@ -109,8 +109,8 @@
 
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Oops...',
-                                text: 'Terjadi kesalahan!',
+                                // title: 'Oops...',
+                                text: 'Tidak ada produk yang terdaftar!',
                             });
                         });
                 }

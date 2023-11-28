@@ -21,10 +21,12 @@
     </a>
 </div>
 
+@if (auth()->user()->role_id === 1)
 <a class="sidebar-menu text-decoration-none text-body position-relative mb-1 d-flex align-items-center gap-2 user-select-none cursor-pointer py-2 px-3 {{ str_contains(Route::currentRouteName(), 'transaction')? 'active' : '' }}" href="{{ route('transaction.index') }}">
     <ion-icon name="bar-chart" class="f20"></ion-icon>
     <div class="fw-medium">Laporan Penjualan</div>
 </a>
+@endif
 
 <div class="border-bottom pt-1 mb-1 mx-2"></div>
 @if (auth()->user()->role_id === 1)
