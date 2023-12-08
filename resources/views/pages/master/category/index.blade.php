@@ -12,7 +12,7 @@
             @csrf
             
             <div class="card border-0 p-4">
-                <div class="fw-medium pb-5 f18">Informasi Service</div>
+                <div class="fw-medium pb-5 f18">Tambah Kategori</div>
     
                 <div class="d-flex pb-5 gap-5">
                     <div class="w-25 flex-shrink-0">
@@ -23,7 +23,7 @@
                         </div>
             
                         <div class="f14 pt-2">
-                            Judul akan ditampilkan pada setiap halaman yang dituju.
+                            *untuk ubah nama kategori klik "ubah" pada daftar kategori lalu ubah pada form disamping
                         </div>
                     </div>
             
