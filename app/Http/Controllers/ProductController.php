@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Nette\Utils\Random;
 
@@ -42,6 +43,7 @@ class ProductController extends Controller
             'name'          => 'required|string|max:255',
             'code'          => 'required|string|max:255',
             'photo'         => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'buy_price'    => 'required|numeric',
             'sale_price'    => 'required|numeric',
             'qty'           => 'required|numeric',
             'category_id'   => 'required|numeric|exists:categories,id',
@@ -75,6 +77,7 @@ class ProductController extends Controller
             'name'          => 'required|string|max:255',
             'code'          => 'required|string|max:255',
             'photo'         => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'buy_price'    => 'required|numeric',
             'sale_price'    => 'required|numeric',
             'qty'           => 'required|numeric',
             'category_id'   => 'required|numeric|exists:categories,id',
@@ -113,8 +116,10 @@ class ProductController extends Controller
         $order = $request->order?? 'desc';
         $orderBy = $request->orderBy?? 'created_at';
 
-        $product = Product::select('id', 'name', 'code', 'photo', 'sale_price', 'qty', 'available_qty', 'category_id', 'created_at', 'updated_at')
-            ->orderBy($orderBy, $order);
+        $product = DB::table('products')
+                        ->join('categories', 'products.category_id', '=', 'categories.id')
+                        ->select('products.id', 'products.name', 'products.code', 'products.photo', 'products.sale_price', 'products.qty', 'products.available_qty', 'products.buy_price', 'products.created_at', 'products.updated_at', 'categories.name as category_name')
+                        ->orderBy($orderBy, $order);
 
         if ($limit && is_numeric($limit))   $product->limit($limit);
         if ($offset && is_numeric($offset)) $product->offset($offset);

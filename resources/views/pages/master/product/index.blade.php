@@ -31,9 +31,10 @@
     gridOptions.columnDefs = [
         { field: 'code', headerName: 'Kode Barang' },
         { field: 'name', headerName: 'Nama Barang' },
-        { field: 'category_id', headerName: 'Kategori Barang' },
+        { field: 'category_name', headerName: 'Kategori Barang' },
         { field: 'photo', headerName: 'Foto', cellRenderer: ImageCellRenderer },
-        { field: 'sale_price', headerName: 'Harga', cellRenderer: ({ value }) => formatPrice(value) },
+        { field: 'buy_price', headerName: 'Harga Beli', cellRenderer: ({ value }) => formatPrice(value) },
+        { field: 'sale_price', headerName: 'Harga Jual', cellRenderer: ({ value }) => formatPrice(value) },
         { field: 'qty', headerName: 'Stok Total'},
         { field: 'available_qty', headerName: 'Stok Barang Tersedia' },
         { field: 'created_at', headerName: 'Tanggal Buat', valueFormatter: ({ value }) => formatDateTime(value), sort: 'desc' },

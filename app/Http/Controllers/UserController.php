@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Nette\Utils\Random;
 
 class UserController extends Controller
@@ -97,8 +98,10 @@ class UserController extends Controller
         $order = $request->order?? 'desc';
         $orderBy = $request->orderBy?? 'created_at';
 
-        $user = User::select('nip', 'name', 'username', 'address', 'phone', 'photo', 'role_id', 'created_at', 'updated_at')
-            ->orderBy($orderBy, $order);
+        $user = DB::table('users')
+                    ->join('roles', 'users.role_id', '=', 'roles.role_id')
+                    ->select('users.nip', 'users.name', 'users.username', 'users.address', 'users.phone', 'users.photo', 'users.role_id', 'users.created_at', 'users.updated_at', 'roles.name as role_name')
+                    ->orderBy($orderBy, $order);
 
         if ($limit && is_numeric($limit))   $user->limit($limit);
         if ($offset && is_numeric($offset)) $user->offset($offset);

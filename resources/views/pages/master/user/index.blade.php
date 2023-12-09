@@ -35,7 +35,7 @@
         { field: 'address', headerName: 'Alamat' },
         { field: 'phone', headerName: 'Nomor Hp' },
         { field: 'photo', headerName: 'Foto', cellRenderer: ({ value }) => formatImage(value) }, 
-        { field: 'role_id', headerName: 'Role'},
+        { field: 'role_name', headerName: 'Role'},
         { field: 'created_at', headerName: 'Tanggal Buat', valueFormatter: ({ value }) => formatDateTime(value), sort: 'desc' },
         { field: 'action', headerName: 'Aksi', minWidth: 200, sortable: false, cellRenderer: AgGridDefaultBtn, cellRendererParams: {
             canUpdate: true,

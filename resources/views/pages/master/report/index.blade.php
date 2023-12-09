@@ -5,11 +5,11 @@
     <div class="d-flex justify-content-between align-items-center flex-shrink-0 gap-4 align-content-center">
         <h4 class="m-0">Laporan Penjualan</h4>
         <ul class="nav nav-underline mb-0">
-            <li class="nav-item me-4">
-                <a class="nav-link active" aria-current="page" href="#grap" id="grap-button" onclick="showTab('grap')">Grap</a>
-            </li>
             <li class="nav-item">
-                <a class="nav-link" href="#table" id="table-button" onclick="showTab('table')">Table</a>
+                <a class="nav-link active" aria-current="page" href="#table" id="table-button" onclick="showTab('table')">Table</a>
+            </li>
+            <li class="nav-item me-4">
+                <a class="nav-link" href="#grap" id="grap-button" onclick="showTab('grap')">Grap</a>
             </li>
         </ul>
     </div>
@@ -39,12 +39,29 @@
   
     <div class="card border-0 flex-grow-1 d-flex flex-column h-100 mt-4 d-none" id="table">
         <div class="d-flex justify-content-between align-items-center flex-shrink-0 gap-4">
-            <div class="border-bottom px-4 pt-4 pb-3 flex-shrink-0">
-                <div class="position-relative search-box">
+            <div class="px-4 pt-4 pb-3 flex-shrink-0 d-flex gap-3 align-items-center">
+                <div class="position-relative search-box" style="margin-bottom: 0">
                     <ion-icon name="search" class="f24 position-absolute"></ion-icon>
                     <input type="text" id="filter-text-box" class="form-control" placeholder="Ketik untuk mencari..." onchange="search()">
                 </div>
+
+                <form method="get" action="{{ route('transaction.index') }}" class="d-flex">
+                    <div class="pt-4 pb-3 flex-shrink-0">
+                      <div class="position-relative search-box">
+                          <input type="date" id="" class="form-control" name="start_date" placeholder="">
+                      </div>
+                    </div>
+                    <div class="px-2 pt-4 pb-3 flex-shrink-0">
+                      <div class="position-relative search-box">
+                          <input type="date" id="" class="form-control" name="end_date" placeholder="">
+                      </div>
+                    </div>
+                    <div class="pt-4 pb-3 flex-shrink-0">
+                      <button id="" class="btn btn-primary">Filter</button>
+                    </div>
+                </form>
             </div>
+
 
             <div class="px-4 pt-4 pb-3 flex-shrink-0">
             <a href="{{ route('transaction.pdf') }}" id="" class="btn btn-primary">Download Laporan</a>
@@ -61,7 +78,7 @@
   
   <script>
     window.onload = function() {
-        showDefaultTab('grap');
+        showDefaultTab('table');
     }
 
     function showDefaultTab(defaultTab) {
@@ -111,6 +128,7 @@
 
   <script>
       gridOptions.columnDefs = [
+          { headerName: "No", valueGetter: "node.rowIndex + 1", width: 10 },
           { field: 'sale_no', headerName: 'Nomor Pembelian' },
           { field: 'subtotal', headerName: 'Subtotal', cellRenderer: ({ value }) => formatPrice(value) },
           { field: 'grandtotal', headerName: 'Grandtotal', cellRenderer: ({ value }) => formatPrice(value) },
@@ -145,6 +163,8 @@
           };
           api.setDatasource(source);
       };
+
+      gridOptions.onSortChanged = ({ api }) => api.refreshInfiniteCache();
   
       function search() {
           gridOptions.api.refreshInfiniteCache();

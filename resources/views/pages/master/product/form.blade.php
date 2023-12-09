@@ -50,7 +50,7 @@
                                 <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">Foto</div>
                     
-                                    <div class="badge text-bg-primary required-badge fw-medium">Wajib</div>
+                                    <div class="badge text-bg-secondary required-badge fw-medium">Optional</div>
                                 </div>
                             </div>
                             <div class="flex-grow-1 d-flex gap-3">
@@ -69,9 +69,23 @@
                         <div class="d-flex pb-5 gap-5">
                             <div class="w-25 flex-shrink-0">
                                 <div class="align-items-center gap-2">
+                                    <div class="fw-medium text-gray">Harga Beli</div>
+                    
+                                    <div class="badge text-bg-secondary required-badge fw-medium">Optional</div>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text" id="buy_price">Rp</span>
+                                <input type="number" placeholder="Masukkan Harga Barang" class="form-control" id="buy_price" name="buy_price" required value="{{ isset($product) ? $product->buy_price : '' }}" aria-describedby="sale_price">
+                            </div>
+                        </div>
+
+                        <div class="d-flex pb-5 gap-5">
+                            <div class="w-25 flex-shrink-0">
+                                <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">Harga Jual</div>
                     
-                                    <div class="badge text-bg-primary required-badge fw-medium">Wajib</div>
+                                    <div class="badge text-bg-secondary required-badge fw-medium">Optional</div>
                                 </div>
                             </div>
                             <div class="input-group">
@@ -85,7 +99,7 @@
                                 <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">Kuantitas</div>
                     
-                                    <div class="badge text-bg-primary required-badge fw-medium">Wajib</div>
+                                    <div class="badge text-bg-secondary required-badge fw-medium">Optional</div>
                                 </div>
                             </div>
                             <input type="number" placeholder="Masukkan Jumlah Barang" class="form-control" id="qty" name="qty" required value="{{ isset($product) ? $product->qty : '' }}">

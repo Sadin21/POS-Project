@@ -17,6 +17,7 @@ class Product extends Model
         'name',
         'code',
         'photo',
+        'buy_price',
         'sale_price',
         'qty',
         'available_qty',

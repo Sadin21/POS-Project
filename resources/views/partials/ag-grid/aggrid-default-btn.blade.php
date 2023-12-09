@@ -15,8 +15,8 @@
             this.eGui = document.createElement('div');
             this.eGui.innerHTML = `
                 <div class="d-flex align-items-center justify-content-end w-100 h-100 pt-1 gap-2">
-                    ${ canShowDetail? `<button type="button" id="detail" class="d-flex align-items-center fsemibold btn btn-sm btn-success border">Detail</button>` : '' }
-                    ${ canUpdate? `<button type="button" id="update" class="d-flex align-items-center fsemibold btn btn-sm btn-light border">${ updateText || 'Ubah' }</button>` : '' }
+                    ${ canShowDetail? `<button type="button" id="detail" class="d-flex align-items-center fsemibold btn btn-sm btn-light border">Detail</button>` : '' }
+                    ${ canUpdate? `<button type="button" id="update" class="d-flex align-items-center fsemibold btn btn-sm btn-success border">${ updateText || 'Ubah' }</button>` : '' }
                     ${ canResetPwd? `<button type="button" id="reset" class="d-flex align-items-center fsemibold btn btn-sm btn-primary border">${ resetText || 'Reset' }</button>` : '' }
                     ${ canDelete? `<button type="button" id="delete" class="d-flex align-items-center fsemibold btn btn-sm btn-danger">Hapus</button>` : '' }
                 </div>
