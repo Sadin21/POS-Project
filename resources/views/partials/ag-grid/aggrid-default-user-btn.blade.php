@@ -1,7 +1,22 @@
 <script>
     class AgGridDefaultBtn {
 
-        init({ data, api, canDelete, canUpdate, canResetPwd, updateText, resetText, deleteUrl, updateUrl, resetPwd, updateColumn, node: { nip } }) {
+        init({
+            data,
+            api,
+            canDelete,
+            canUpdate,
+            canResetPwd,
+            updateText,
+            resetText,
+            deleteUrl,
+            updateUrl,
+            resetPwd,
+            updateColumn,
+            node: {
+                nip
+            }
+        }) {
             this.rowId = nip;
             this.data = data;
             this.gridApi = api;
@@ -29,17 +44,23 @@
             this.uButton?.addEventListener('click', this.reset.bind(this));
         }
 
-        refresh(_) { return true; }
-
-        destroy() { 
-            this.dButton?.removeEventListener('click', this.delete); 
-            this.uButton?.removeEventListener('click', this.update); 
-            this.uButton?.removeEventListener('click', this.reset); 
+        refresh(_) {
+            return true;
         }
 
-        getGui() { return this.eGui; }
+        destroy() {
+            this.dButton?.removeEventListener('click', this.delete);
+            this.uButton?.removeEventListener('click', this.update);
+            this.uButton?.removeEventListener('click', this.reset);
+        }
 
-        delete({ target }) {
+        getGui() {
+            return this.eGui;
+        }
+
+        delete({
+            target
+        }) {
             Swal.fire({
                 title: 'Apakah anda yakin untuk menghapus data?',
                 showCancelButton: true,
@@ -48,19 +69,32 @@
                 showLoaderOnConfirm: true,
                 allowOutsideClick: () => !Swal.isLoading(),
                 preConfirm: () => {
-                    return callApi({ url: this.deleteUrl, method: 'POST', body: JSON.stringify({ nip: this.data.nip }), next: ({ data }) => {
-                        // console.log('oke');
-                        gridOptions.api.refreshInfiniteCache();
-                    } });
+                    return callApi({
+                        url: this.deleteUrl,
+                        method: 'POST',
+                        body: JSON.stringify({
+                            nip: this.data.nip
+                        }),
+                        next: ({
+                            data
+                        }) => {
+                            // console.log('oke');
+                            gridOptions.api.refreshInfiniteCache();
+                        }
+                    });
                 }
-            });            
+            });
         }
 
-        update({ target }) {
+        update({
+            target
+        }) {
             window.location.href = this.updateUrl.replace('nip', this.data.nip);
         }
 
-        reset({ target }) {
+        reset({
+            target
+        }) {
             window.location.href = this.resetPwd.replace('nip', this.data.nip);
         }
     }
