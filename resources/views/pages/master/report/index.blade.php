@@ -5,12 +5,12 @@
     <div class="d-flex justify-content-between align-items-center flex-shrink-0 gap-4 align-content-center">
         <h4 class="m-0">Laporan Penjualan</h4>
         <ul class="nav nav-underline mb-0">
-            <li class="nav-item me-4">
-                <a class="nav-link active" aria-current="page" href="#grap" id="grap-button" onclick="showTab('grap')">Grap</a>
-            </li>
             <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#table" id="table-button"
+                <a class="nav-link active" aria-current="page" href="#table" id="table-button"
                     onclick="showTab('table')">Table</a>
+            </li>
+            <li class="nav-item me-4">
+                <a class="nav-link" aria-current="page" href="#grap" id="grap-button" onclick="showTab('grap')">Grap</a>
             </li>
 
         </ul>
@@ -83,7 +83,7 @@
 
     <script>
         window.onload = function() {
-            showDefaultTab('grap');
+            showDefaultTab('table');
         }
 
         function showDefaultTab(defaultTab) {
