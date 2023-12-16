@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return redirect(route('auth.login'));
@@ -60,5 +60,6 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
         Route::get('/', 'index')->name('index');
         Route::match(['get', 'post'], 'store', 'store')->name('store');
         Route::match(['get', 'post'], '{nip}', 'update')->name('update');
+        Route::match(['get', 'post'], '{nip}/reset', 'reset')->name('reset');
     });
 });

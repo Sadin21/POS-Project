@@ -95,7 +95,42 @@
         reset({
             target
         }) {
-            window.location.href = this.resetPwd.replace('nip', this.data.nip);
+            Swal.fire({
+                title: 'Apakah anda yakin untuk mengubah password ?',
+                showCancelButton: true,
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: () => !Swal.isLoading(),
+                preConfirm: async () => {
+                    try {
+                        const url = this.resetPwd.replace('nip', this.data.nip);
+                        const response = await fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        });
+                        if (!response.ok) {
+                            return Swal.showValidationMessage(
+                                `${JSON.stringify(await response.json())}`);
+                        }
+                        return response.json();
+                    } catch (error) {
+                        Swal.showValidationMessage(`Request failed: ${error}`);
+                    }
+                }
+            }).then((result) => {
+                console.log(result);
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Password berhasil diubah',
+                        icon: 'success',
+                        text: result.value.data,
+                        showConfirmButton: false,
+                    })
+                }
+            });
         }
     }
 </script>

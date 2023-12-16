@@ -9,29 +9,34 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Nette\Utils\Random;
 
 class UserController extends Controller
 {
-    public function index(): View {
+    public function index(): View
+    {
         return view('pages.master.user.index');
     }
 
-    public function store(Request $request): View | RedirectResponse {
+    public function store(Request $request): View | RedirectResponse
+    {
         $mode = 'store';
         $roles = Role::get();
 
-        if ($request->getMethod() === 'GET') return view('pages.master.user.form', compact('mode','roles'));
+        if ($request->getMethod() === 'GET') {
+            return view('pages.master.user.form', compact('mode', 'roles'));
+        }
 
         $input = $this->validate($request, [
-            'nip'           => 'required',
-            'name'          => 'required|string',
-            'username'      => 'required|string',
-            'address'       => 'nullable|string',
-            'phone'         => 'nullable|string',
-            'photo'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'password'      => 'required|string',
-            'role_id'       => 'required|exists:roles,role_id',
+            'nip' => 'required',
+            'name' => 'required|string',
+            'username' => 'required|string',
+            'address' => 'nullable|string',
+            'phone' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'password' => 'required|string',
+            'role_id' => 'required|exists:roles,role_id',
         ]);
 
         if ($request->file('photo')) {
@@ -49,23 +54,28 @@ class UserController extends Controller
         }
     }
 
-    public function update(Request $request, string $nip): View | RedirectResponse {
+    public function update(Request $request, string $nip): View | RedirectResponse
+    {
         $mode = 'update';
         $user = User::find($nip);
         $roles = Role::get();
-        if (!$user) return redirect()->back()->with('error', 'Data tidak ditemukan');
+        if (!$user) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan');
+        }
 
-        if ($request->getMethod() === 'GET') return view('pages.master.user.form', compact('mode', 'roles', 'user'));
+        if ($request->getMethod() === 'GET') {
+            return view('pages.master.user.form', compact('mode', 'roles', 'user'));
+        }
 
         $input = $this->validate($request, [
-            'nip'           => 'required',
-            'name'          => 'required|string',
-            'username'      => 'required|string',
-            'address'       => 'nullable|string',
-            'phone'         => 'nullable|string',
-            'photo'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'role_id'       => 'required|exists:roles,role_id',
-            'password'      => 'nullable|string',
+            'nip' => 'required',
+            'name' => 'required|string',
+            'username' => 'required|string',
+            'address' => 'nullable|string',
+            'phone' => 'nullable|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'role_id' => 'required|exists:roles,role_id',
+            'password' => 'nullable|string',
         ]);
 
         if ($request->file('photo')) {
@@ -83,41 +93,70 @@ class UserController extends Controller
         }
     }
 
-    public function destroy(Request $request):  JsonResponse{
+    public function destroy(Request $request): JsonResponse
+    {
         $user = User::find($request->nip);
-        if (!$user) return response()->json([ 'message' => 'Data tidak ditemukan' ], 404);
-        
+        if (!$user) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
         $user->delete();
-        return response()->json([ 'message' => 'Data berhasil dihapus' ]);
+        return response()->json(['message' => 'Data berhasil dihapus']);
     }
 
-    public function query(Request $request): JsonResponse {
+    public function reset(string $nip): JsonResponse
+    {
+        try {
+            $newPassword = Str::random(10);
+            $user = User::find($nip);
+            if (!$user) {
+                return response()->json(['message' => 'Data tidak ditemukan'], 404);
+            }
+            $user->password = bcrypt($newPassword);
+            $user->save();
+            return response()->json([
+                'message' => 'Password berhasil direset',
+                'data' => $newPassword,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Password gagal direset'], 500);
+        }
+    }
+
+    public function query(Request $request): JsonResponse
+    {
         $limit = $request->limit;
         $offset = $request->offset;
         $keyword = $request->keyword;
-        $order = $request->order?? 'desc';
-        $orderBy = $request->orderBy?? 'created_at';
+        $order = $request->order ?? 'desc';
+        $orderBy = $request->orderBy ?? 'created_at';
 
         $user = DB::table('users')
-                    ->join('roles', 'users.role_id', '=', 'roles.role_id')
-                    ->select('users.nip', 'users.name', 'users.username', 'users.address', 'users.phone', 'users.photo', 'users.role_id', 'users.created_at', 'users.updated_at', 'roles.name as role_name')
-                    ->orderBy($orderBy, $order);
+            ->join('roles', 'users.role_id', '=', 'roles.role_id')
+            ->select('users.nip', 'users.name', 'users.username', 'users.address', 'users.phone', 'users.photo', 'users.role_id', 'users.created_at', 'users.updated_at', 'roles.name as role_name')
+            ->orderBy($orderBy, $order);
 
-        if ($limit && is_numeric($limit))   $user->limit($limit);
-        if ($offset && is_numeric($offset)) $user->offset($offset);
+        if ($limit && is_numeric($limit)) {
+            $user->limit($limit);
+        }
+
+        if ($offset && is_numeric($offset)) {
+            $user->offset($offset);
+        }
+
         if ($keyword) {
             $user->where(function ($u) use ($keyword) {
-                $u->where('name', 'LIKE', '%'. $keyword . '%')
-                ->orWhere('nip', 'LIKE', '%'. $keyword . '%')
-                ->orWhere('nip', 'LIKE', '%'. $keyword . '%')
-                ->orWhere('role_id', 'LIKE', '%'. $keyword . '%');
+                $u->where('name', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('nip', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('nip', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('role_id', 'LIKE', '%' . $keyword . '%');
             });
         }
 
         return response()->json([
             'totalRecords' => $user->count(),
             'data' => $user->get(),
-            'message' => 'Success'
+            'message' => 'Success',
         ], 200);
     }
 }
