@@ -37,7 +37,7 @@ class SaleController extends Controller
         $hdr->discount = 0;
         $hdr->grandtotal = $grandTotal;
         $hdr->total_qty = $totalQty;
-        $hdr->payment = 'cash';
+        $hdr->payment = $request->payment;
         $hdr->cash_amount = $request->pay;
         $hdr->change_amount = $request->return;
         $hdr->status = 'paid';

@@ -46,6 +46,7 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
+                                    <th>No.</th>
                                     <th>Kode Barang</th>
                                     <th>Nama Barang</th>
                                     <th>Jumlah</th>
@@ -92,6 +93,18 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <h3 class="fw-bold" id="text-total"></h3>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column rounded-2 px-3">
+                        <div class="d-flex justify-content-between">
+                            <h5>Metode Pembayaran</h5>
+                        </div>
+                        <div class="input-group mb-3">
+                            <select name="payment" id="payment" class="form-select">
+                                <option value="cash" {{ old('payment') == 'cash' ? 'selected' : (empty(old('payment')) ? 'selected' : '') }}>Cash</option>
+                                <option value="qris" {{ old('payment') == 'qris' ? 'selected' : '' }}>Qris</option>
+                                <option value="debit" {{ old('payment') == 'debit' ? 'selected' : '' }}>Debit</option>
+                            </select>
                         </div>
                     </div>
                     <div class="d-flex flex-column rounded-2 px-3">
@@ -148,6 +161,7 @@
                 const name = selectedOption.data("name");
                 const price = selectedOption.data("price");
                 const qty = selectedOption.data("qty");
+                const iteration = $("#cart tr").length + 1;
 
                 const rowId = "row-" + code;
                 if ($("#" + rowId).length > 0) return;
@@ -155,12 +169,13 @@
                 const jumlahInput = `<input type="number" name="jumlah" value="1" min="1" max="${qty}" id="input-${rowId}">`;
                 const row = `
                     <tr id="${rowId}" data-code="${code}" data-name="${name}" data-qty="1" data-price="${price}" data-total-price="${price}">
+                        <td >${iteration}.</td>
                         <td >${code}</td>
                         <td >${name}</td>
                         <td>${jumlahInput}</td>
                         <td  id="text-price-${rowId}">${price}</td>
                         <td  id="text-total-${rowId}">${price}</td>
-                        <td><button class="btn btn-danger btn-sm" data-row-id="${rowId}" id="btn-${rowId}">Hapus</button></td>
+                        <td><button class="btn btn-danger btn-sm" data-row-id="${rowId}" id="btn-delete-${rowId}">Hapus</button></td>
                     </tr>
                 `;
                 $("#cart").append(row);
@@ -182,7 +197,7 @@
                 calculate();
             });
 
-            $(document).on("click", "button[id^='btn-']", function () {
+            $(document).on("click", "button[id^='btn-delete-']", function () {
                 const buttonId = $(this).data("row-id");
                 const rowId = buttonId.replace("btn-", ""); // Mengambil ID baris dari tombol
 
@@ -212,6 +227,7 @@
                 });
 
                 const requestData = {
+                    payment: $("#payment").val(),
                     pay: $("#input-pay").val(),
                     return: $("#input-return").val(),
                     cart: dataCart
