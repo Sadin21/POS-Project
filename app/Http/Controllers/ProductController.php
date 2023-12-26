@@ -101,8 +101,8 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy(Request $request): JsonResponse{
-        $product = Product::find($request->id);
+    public function destroy(Request $request, $id): JsonResponse{
+        $product = Product::find($id);
         if (!$product) return response()->json([ 'message' => 'Data tidak ditemukan' ], 404);
 
         $product->delete();

@@ -51,8 +51,8 @@ class CategoryController extends Controller
         }
     }
 
-    public function destroy(Request $request): JsonResponse {
-        $category = Category::find($request->id);
+    public function destroy(Request $request, $id): JsonResponse {
+        $category = Category::find($id);
         if (!$category) return response()->json(['message' => 'Data tidak ditemukan'], 404);
 
         if (Product::where('category_id', $category->id)->exists()) return response()->json(['message' => 'Data tidak dapat dihapus karena masih digunakan'], 400);

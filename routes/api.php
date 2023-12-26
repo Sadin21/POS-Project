@@ -24,21 +24,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(ProductController::class)->prefix('product')->name('product.')->group(function () {
     Route::get('query', 'query')->name('query');
-    Route::post('delete', 'destroy')->name('delete');
+    Route::delete('delete/{id}', 'destroy')->name('delete');
 });
 
 Route::controller(UserController::class)->prefix('user')->name('user.')->group(function () {
     Route::get('query', 'query')->name('query');
-    Route::post('delete', 'destroy')->name('delete');
+    Route::delete('delete/{id}', 'destroy')->name('delete');
 });
 
 Route::controller(TransactionReportController::class)->prefix('report')->name('report.')->group(function () {
     Route::get('query', 'query')->name('query');
+    Route::get('chart-data', 'chartData')->name('chart-data');
     Route::post('delete', 'destroy')->name('delete');
 });
 
 Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function () {
     Route::get('query', 'query')->name('query');
-    Route::post('delete', 'destroy')->name('delete');
+    Route::delete('delete/{id}', 'destroy')->name('delete');
     Route::get('/detail-product/{id}', 'getDetailProduct')->name('detail-product');
 });
