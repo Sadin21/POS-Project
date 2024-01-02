@@ -11,10 +11,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Nette\Utils\Random;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
-    public function index(): View
+    public function index(Request $request)
     {
         return view('pages.master.user.index');
     }
@@ -93,15 +94,16 @@ class UserController extends Controller
         }
     }
 
-    public function destroy(Request $request): JsonResponse
+    public function destroy(Request $request, string $nip): JsonResponse
     {
-        $user = User::find($request->nip);
+        $user = User::find($nip);
         if (!$user) {
             return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
         $user->delete();
         return response()->json(['message' => 'Data berhasil dihapus']);
+        // return
     }
 
     public function reset(string $nip): JsonResponse

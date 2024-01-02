@@ -19,8 +19,25 @@
         </div>
     </div>
 
-    <div class="p-1 flex-grow-1 mt-4">
-        <div id="grid" class="ag-theme-alpine h-100"></div>
+    <div class="p-1 flex-grow-1 p-4 w-100">
+        <table class="table w-100 border" id="product-table" style="border-radius: 10px">
+            <thead>
+                <tr style="background-color: #F8F8F8">
+                    <th>Kode Barang</th>
+                    <th>Nama</th>
+                    <th>Kategori</th>
+                    <th>Foto</th>
+                    <th>Harga Beli</th>
+                    <th>Harga Jual</th>
+                    <th>Stok Total</th>
+                    <th>Stok Tersedia</th>
+                    <th>Tanggal Buat</th>
+                    <th width="180px">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>        
     </div>
 </div>
 
@@ -28,52 +45,85 @@
 @include('partials.ag-grid.aggrid-default-btn')
 
 <script>
-    gridOptions.columnDefs = [
-        { field: 'code', headerName: 'Kode Barang' },
-        { field: 'name', headerName: 'Nama Barang' },
-        { field: 'category_name', headerName: 'Kategori Barang' },
-        { field: 'photo', headerName: 'Foto', cellRenderer: ImageCellRenderer },
-        { field: 'buy_price', headerName: 'Harga Beli', cellRenderer: ({ value }) => formatPrice(value) },
-        { field: 'sale_price', headerName: 'Harga Jual', cellRenderer: ({ value }) => formatPrice(value) },
-        { field: 'qty', headerName: 'Stok Total'},
-        { field: 'available_qty', headerName: 'Stok Barang Tersedia' },
-        { field: 'created_at', headerName: 'Tanggal Buat', valueFormatter: ({ value }) => formatDateTime(value), sort: 'desc' },
-        { field: 'action', headerName: 'Aksi', minWidth: 200, sortable: false, cellRenderer: AgGridDefaultBtn, cellRendererParams: {
-            canUpdate: true,
-            canDelete: true,
-            updateUrl: `{{ route('product.update', 'id') }}`,
-            deleteUrl: `{{ route('product.delete') }}`,
-        }}
-    ];
-    
-    gridOptions.onGridReady = ({ api }) => {
-        const source = {
-            getRows: (p) => {
-                api.showLoadingOverlay();
 
-                const limit = p.endRow - p.startRow;
-                const { sort, colId } = p.sortModel[0];
-                const keyword = document.getElementById('filter-text-box').value;
+    $.ajax({
+        url: `{{ route('product.query') }}`,
+        type: "GET",
+        dataType: "JSON",
+        success: function (res) {
+            originalData = res.data;
 
-                callApi({
-                    url: `{{ route('product.query') }}?keyword=${ keyword }&limit=${ limit }&offset=${ p.startRow }&order=${ sort }&order_by=${ colId }`,
-                    error: () => p.failCallback(),
-                    next: ({ data }) => {
-                        api.hideOverlay();
+            var rotationTable = $('#product-table').DataTable({
+                data: originalData,
+                columns: [
+                    {data: 'code', name: 'kode_barang'},
+                    {data: 'name', name: 'nama'},
+                    {data: 'category_name', name: 'kategori'},
+                    {
+                        data: 'photo', 
+                        name: 'foto',
+                        render: function (data) {
+                            return `
+                                <img src="/assets/imgs/${data}" class="img-fluid border border-2 border-primary rounded w-40 h-50" alt="">
+                            `;
+                        }
+                    },
+                    {data: 'buy_price', name: 'harga_beli'},
+                    {data: 'sale_price', name: 'harga_jual'},
+                    {data: 'qty', name: 'stok_total'},
+                    {data: 'available_qty', name: 'stok_barang_tersedia'},
+                    {data: 'created_at', name: 'tanggal_buat'},
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return `
+                                <a class="btn btn-sm btn-light border border-1" href="#" onclick="editRow(${row.id})">Ubah</a>
+                                <a class="btn btn-sm btn-danger" href="#" onclick="hapusRow(${row.id})">Hapus</a>
+                            `;
+                        }
+                    },
+                ],
+                'searching': false,
+                'responsive': (screen.width > 960) ? true : false,
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            throw new Error(errorThrown);
+        }
+    });
 
-                        if (data.length === 0 && p.startRow === 0) api.showNoRowsOverlay();
-                        p.successCallback(data, data.length < limit? p.startRow + data.length : null);
-                    } 
-                });
-            }
-        };
-        api.setDatasource(source);
-    };
-
-    function search() {
-        gridOptions.api.refreshInfiniteCache();
+    function editRow(id) {
+        window.location.href = `{{ route('product.update', 'id') }}`.replace('id', id);
     }
 
-    document.addEventListener('DOMContentLoaded', () => (new agGrid.Grid(document.getElementById('grid'), gridOptions)));
+    function hapusRow(id) {
+        Swal.fire({
+            title: 'Hapus Data?',
+            text: 'Anda yakin ingin menghapus data ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Hapus',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: `{{ route('product.delete', ['id' => 'id']) }}`.replace('id', id),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        Swal.fire('Berhasil!', data.message, 'success');
+                        location.reload(true);
+                    },
+                    error: function (error) {
+                        Swal.fire('Gagal', error.responseJSON.message, 'error');
+                    }
+                });
+            }
+        });
+    }
 </script>
 @endsection

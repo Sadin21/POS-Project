@@ -24,7 +24,7 @@
                                 <div class="badge text-bg-primary required-badge fw-medium">Wajib</div>
                             </div>
                         </div>
-                        <input type="text" placeholder="Masukkan NIP" class="form-control" id="nip" name="nip" required value="{{ isset($user) ? $user->nip : '' }}">
+                        <input type="number" placeholder="Masukkan NIP" class="form-control" id="nip" name="nip" required value="{{ isset($user) ? $user->nip : '' }}">
                     </div>
     
                     <div class="d-flex pb-5 gap-5">

@@ -55,8 +55,19 @@
         </div>
     </div>
 
-    <div class="p-1 flex-grow-1 mt-4">
-        <div id="grid" class="ag-theme-alpine h-100"></div>
+    <div class="p-1 flex-grow-1 p-4 w-100">
+        <table class="table w-100 border" id="category-table" style="border-radius: 10px">
+            <thead>
+                <tr style="background-color: #F8F8F8">
+                    <th>ID</th>
+                    <th>Nama Kategori</th>
+                    <th>Tanggal Buat</th>
+                    <th width="180px">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>        
     </div>
 </div>
 
@@ -64,48 +75,116 @@
 @include('partials.ag-grid.aggrid-default-btn')
 
 <script>
-    gridOptions.columnDefs = [
-        { field: 'id', headerName: 'ID' },
-        { field: 'name', headerName: 'Nama Barang' },
-        { field: 'created_at', headerName: 'Tanggal Buat', valueFormatter: ({ value }) => formatDateTime(value), sort: 'desc' },
-        { field: 'action', headerName: 'Aksi', minWidth: 200, sortable: false, cellRenderer: AgGridDefaultBtn, cellRendererParams: {
-            canShowDetail: true,
-            canUpdate: true,
-            canDelete: true,
-            detailUrl: `{{ route('category.detail-product', 'id') }}`,
-            updateUrl: `{{ route('category.update', 'id') }}`,
-            deleteUrl: `{{ route('category.delete') }}`,
-        }}
-    ];
-    
-    gridOptions.onGridReady = ({ api }) => {
-        const source = {
-            getRows: (p) => {
-                api.showLoadingOverlay();
+    $.ajax({
+        url: `{{ route('category.query') }}`,
+        type: "GET",
+        dataType: "JSON",
+        success: function (res) {
+            originalData = res.data;
+            var table = $('#category-table').DataTable({
+                data: originalData,
+                columns: [
+                    {data: 'id', name: 'id'},
+                    {data: 'name', name: 'nama_kategori'},
+                    {data: 'created_at', name: 'tanggal_buat'},
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return `
+                                <a class="btn btn-sm btn-light border border-1" href="#" onclick="editRow(${row.id})">Ubah</a>
+                                <a class="btn btn-sm btn-primary" href="#" onclick="detailRow(${row.id})">Detail</a>
+                                <a class="btn btn-sm btn-danger" href="#" onclick="hapusRow(${row.id})">Hapus</a>
+                            `;
+                        }
+                    },
+                ],
+                'searching': false,
+                'responsive': (screen.width > 960) ? true : false,
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            throw new Error(errorThrown);
+        }
+    });
 
-                const limit = p.endRow - p.startRow;
-                const { sort, colId } = p.sortModel[0];
-                const keyword = document.getElementById('filter-text-box').value;
-
-                callApi({
-                    url: `{{ route('category.query') }}?keyword=${ keyword }&limit=${ limit }&offset=${ p.startRow }&order=${ sort }&order_by=${ colId }`,
-                    error: () => p.failCallback(),
-                    next: ({ data }) => {
-                        api.hideOverlay();
-
-                        if (data.length === 0 && p.startRow === 0) api.showNoRowsOverlay();
-                        p.successCallback(data, data.length < limit? p.startRow + data.length : null);
-                    } 
-                });
-            }
-        };
-        api.setDatasource(source);
-    };
-
-    function search() {
-        gridOptions.api.refreshInfiniteCache();
+    function editRow(id) {
+        window.location.href = `{{ route('category.update', 'id') }}`.replace('id', id);
     }
 
-    document.addEventListener('DOMContentLoaded', () => (new agGrid.Grid(document.getElementById('grid'), gridOptions)));
+    function detailRow(id) {
+        Swal.fire({
+            title: "Pnecarian data produk",
+            text: "Mohon tunggu sebentar...",
+            showConfirmButton: false,
+            didOpen: () => {
+                axios.get(`/api/category/detail-product/${id}`)
+                    .then(response => {
+                        const products = response.data.products;
+
+                        if (products.length > 0) {
+                            let htmlContent = '<div>';
+
+                            products.forEach(productData => {
+                                htmlContent += `
+                                    <p>${productData.name}</p>
+                                    `;
+                            });
+
+                            htmlContent += '</div>'; 
+
+                            Swal.fire({
+                                title: "Detail Produk",
+                                html: htmlContent,
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Oops...',
+                                text: 'Tidak ada produk yang terdaftar!',
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+
+                        Swal.fire({
+                            icon: 'error',
+                            // title: 'Oops...',
+                            text: 'Tidak ada produk yang terdaftar!',
+                        });
+                    });
+            }
+        });
+    }
+
+    function hapusRow(id) {
+        Swal.fire({
+            title: 'Hapus Data?',
+            text: 'Anda yakin ingin menghapus data ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Hapus',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: `{{ route('category.delete', ['id' => 'id']) }}`.replace('id', id),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        Swal.fire('Berhasil!', data.message, 'success');
+                        location.reload(true);
+                    },
+                    error: function (error) {
+                        Swal.fire('Gagal', error.responseJSON.message, 'error');
+                    }
+                });
+            }
+        });
+    }
 </script>
 @endsection

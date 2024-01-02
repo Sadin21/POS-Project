@@ -62,5 +62,6 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
         Route::match(['get', 'post'], 'store', 'store')->name('store');
         Route::match(['get', 'post'], '{nip}', 'update')->name('update');
         Route::match(['get', 'post'], '{nip}/reset', 'reset')->name('reset');
+        // Route::delete('{nip}/delete', 'destroy')->name('delete');
     });
 });
