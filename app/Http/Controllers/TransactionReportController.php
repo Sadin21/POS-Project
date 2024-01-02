@@ -106,6 +106,7 @@ class TransactionReportController extends Controller
         $orderBy = $request->orderBy ?? 'sale_invoice_hdr.created_at';
         $startDate = $request->start_date?? 0;
         $endDate = $request->end_date?? 0;
+        $saleNo = $request->sale_no?? 0;
 
         $sale = DB::table('sale_invoice_hdr')
             ->orderBy($orderBy, $order)
@@ -125,6 +126,11 @@ class TransactionReportController extends Controller
                 }
                 if ($endDate) {
                     $query->whereDate('sale_invoice_hdr.created_at', '<=', $endDate);
+                }
+            })
+            ->where(function($query) use ($saleNo) {
+                if ($saleNo) {
+                    $query->where('sale_invoice_hdr.sale_no', '=', $saleNo);
                 }
             });
 

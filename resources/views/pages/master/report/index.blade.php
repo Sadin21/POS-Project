@@ -45,8 +45,7 @@
             <div class="px-4 pt-4 pb-3 flex-shrink-0 d-flex gap-3 align-items-center">
                 <div class="position-relative search-box" style="margin-bottom: 0">
                     <ion-icon name="search" class="f24 position-absolute"></ion-icon>
-                    <input type="text" id="filter-text-box" class="form-control" placeholder="Ketik untuk mencari..."
-                        onchange="search()">
+                    <input type="text" id="search-data" class="form-control" placeholder="Ketik untuk mencari...">
                 </div>
 
                 <div class="d-flex">
@@ -115,10 +114,15 @@
     <script>
 
         var filteredDate = {};
+        var saleNo;
+        var doneTypeInterval = 500;
+        var typingTimer;
+
+        document.getElementById('search-data').addEventListener('input', getInputSearchValue);
 
         document.getElementById('start_date').addEventListener('input', getInputDateValues);
         document.getElementById('end_date').addEventListener('input', getInputDateValues);
-        document.getElementById('btn-filter').addEventListener('click', findData);
+        document.getElementById('btn-filter').addEventListener('click', findDataOnTable);
         document.getElementById('btn-cancel').addEventListener('click', cancelData);
 
         function getInputDateValues() {
@@ -126,12 +130,25 @@
             filteredDate.endDate = document.getElementById('end_date').value;
         }
 
-        function findData() {
+        function getInputSearchValue() {
+            clearTimeout(typingTimer);
+            searchValue = document.getElementById('search-data').value;
+            typingTimer = setTimeout(() => {
+                // showData(0, 0, searchValue.trim().toLowerCase());
+                // findDataOnTable(searchValue.trim().toLowerCase());
+                saleNo = searchValue.trim().toLowerCase();
+            }, doneTypeInterval);
+        }
+
+        console.log(saleNo);
+        function findDataOnTable() {
             if (filteredDate.startDate && filteredDate.endDate) {
                 var fromDate = filteredDate.startDate;
                 var toDate = filteredDate.endDate;
 
                 showData(fromDate, toDate);
+            } else if (saleNo) {
+                console.log(saleNo);
             } else {
                 showData();
             }
@@ -144,11 +161,12 @@
             showData();
         }
 
-        function showData(fromDate, toDate) {
+        function showData(fromDate, toDate, searchValue) {
             $('#report-table').DataTable().destroy();
+            // console.log(searchValue);
 
             $.ajax({
-                url: `{{ route('report.query') }}?start_date=${fromDate?? 0}&end_date=${toDate?? 0}`,
+                url: `{{ route('report.query') }}?start_date=${fromDate?? 0}&end_date=${toDate?? 0}&sale_no=${searchValue?? 0}`,
                 type: "GET",
                 dataType: "JSON",
                 success: function (res) {
@@ -237,48 +255,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    {{-- <script>
-        function fetchData() {
-            fetch('/report/chart-data')
-                .then(response => response.json())
-                .then(data => {
-                    var labels = data.labels;
-                    var datas = data.data;
-
-                    myChart.data.labels = labels;
-                    myChart.data.datasets[0].data = datas;
-                    myChart.update();
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }
-
-        var initialData = {
-            labels: [],
-            datasets: [{
-                label: 'Data Penjualan',
-                backgroundColor: 'rgb(0, 0, 255)',
-                borderColor: 'rgb(0, 0, 255)',
-                data: [],
-            }]
-        };
-
-        var config = {
-            type: 'line',
-            data: initialData,
-            options: {}
-        };
-
-        var myChart = new Chart(
-            document.getElementById('myChart').getContext('2d'),
-            config
-        );
-
-        fetchData();
-    </script> --}}
-
     <script type="text/javascript">
 
         var filteredDate = {};
+        var searchValue = '';
 
         document.getElementById('start_date').addEventListener('input', getInputDateValues);
         document.getElementById('end_date').addEventListener('input', getInputDateValues);
