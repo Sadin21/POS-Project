@@ -45,7 +45,7 @@
             <div class="px-4 pt-4 pb-3 flex-shrink-0 d-flex gap-3 align-items-center">
                 <div class="position-relative search-box" style="margin-bottom: 0">
                     <ion-icon name="search" class="f24 position-absolute"></ion-icon>
-                    <input type="text" id="search-data-table" class="form-control" placeholder="Ketik untuk mencari...">
+                    <input type="text" id="search-data-table" class="form-control" placeholder="Cari nomor pembelian">
                 </div>
 
                 <div class="d-flex">
@@ -80,13 +80,14 @@
                     <tr style="background-color: #F8F8F8">
                         {{-- <th>No</th> --}}
                         <th>Nomor Pembelian</th>
-                        <th>Subtotal</th>
+                        {{-- <th>Subtotal</th> --}}
                         <th>Grandtotal</th>
                         <th>Total Barang</th>
                         <th>Discount</th>
                         <th>Pembayaran</th>
                         <th>Uang Dibayar</th>
                         <th>Status</th>
+                        <th>Kasir</th>
                         <th>Tanggal Pembelian</th>
                     </tr>
                 </thead>
@@ -172,13 +173,14 @@
                         data: originalData,
                         columns: [
                             { data: 'sale_no', name: 'nomor_pembelian' },
-                            { data: 'subtotal', name: 'subtotal' },
+                            // { data: 'subtotal', name: 'subtotal' },
                             { data: 'grandtotal', name: 'grandtotal' },
                             { data: 'total_qty', name: 'total_barang' },
                             { data: 'discount', name: 'discount' },
                             { data: 'payment', name: 'pembayaran' },
                             { data: 'cash_amount', name: 'uang_dibayar' },
                             { data: 'status', name: 'status' },
+                            { data: 'cashier', name: 'kasir' },
                             { data: 'created_at', name: 'tanggal_pembelian' },
                         ],
                         'searching': false,

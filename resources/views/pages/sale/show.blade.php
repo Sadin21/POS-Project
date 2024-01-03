@@ -76,7 +76,7 @@
                         </div>
                         <div class="d-flex justify-content-between mt-3">
                             <h6>Kasir</h6>
-                            <h6>Daffa</h6>
+                            <h6>{{ $sale->cashier }}</h6>
                         </div>
                     </div>
                     <div class="d-flex flex-column rounded-2 p-3 pb-3 my-3 border-bottom border-top">

@@ -41,6 +41,7 @@ class SaleController extends Controller
         $hdr->cash_amount = $request->pay;
         $hdr->change_amount = $request->return;
         $hdr->status = 'paid';
+        $hdr->cashier = auth()->user()->name;
         $hdr->save();
 
         foreach ($request->cart as $cart) {

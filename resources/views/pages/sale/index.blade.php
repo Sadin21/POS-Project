@@ -216,6 +216,30 @@
             $("#btn-save").on("click", function () {
                 const dataCart = [];
 
+                // Check if #cart tr has any value
+                if ($("#cart tr").length === 0) {
+                    // Display SweetAlert if there is no data
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Tidak ada data barang!',
+                    });
+                    return; // Stop further execution
+                }
+
+                const payment = $("#payment").val();
+                const pay = $("#input-pay").val();
+                const returnVal = $("#input-return").val();
+
+                if (!payment || !pay || !returnVal) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan',
+                        text: 'Masukan jumlah uang pembayaran',
+                    });
+                    return; 
+                }
+
                 $("#cart tr").each(function () {
                     const row = $(this);
                     const code = row.data("code");
@@ -226,18 +250,28 @@
                     });
                 });
 
+                if (dataCart.length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Tidak ada data barang!',
+                    });
+                    return; 
+                }
+
                 const requestData = {
-                    payment: $("#payment").val(),
-                    pay: $("#input-pay").val(),
-                    return: $("#input-return").val(),
+                    payment: payment,
+                    pay: pay,
+                    return: returnVal,
                     cart: dataCart
                 }
+
                 const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 $.ajax({
                     type: "POST",
                     url: "{{ route('sale.store') }}",
-                    data: {...requestData, _token: csrfToken},
+                    data: { ...requestData, _token: csrfToken },
                     success: function (response) {
                         window.location.href = "{{ route('sale.show', ['sale' => '']) }}" + "/" + response.sale_no;
                     },
@@ -246,6 +280,7 @@
                     }
                 });
             });
+
 
             $('#product-select').select2({
                 allowClear: true,
