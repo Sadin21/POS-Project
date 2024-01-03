@@ -56,7 +56,8 @@
                     <button type="submit" class="btn btn-primary w-100 mt-3 ">Login</button>
                 </form>
                 <div class="d-flex justify-center w-full">
-                    <a href="#exampleModal" class="" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Lupa password?
+                    <a href="#exampleModal" class="ms-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Reset Password
                     </a>
                 </div>
@@ -84,32 +85,6 @@
             </div>
         </div>
     </div>
-    {{-- <nav class="navbar container d-flex justify-content-center pb-2 pt-4 mt-2">
-            <img src="{{ asset('assets/img/logo.png') }}" alt="AAB Logo" width="auto" height="48px">
-        </nav>
-
-        <main class="pt-5 mt-1 container d-flex flex-column align-items-center flex-grow-1">
-            <form class="card border-0 p-4 mb-0 form" style="width:90%;max-width:450px;" method="POST" action="">
-                <h3 class="mb-4 pb-2">Masuk</h3>
-
-                @csrf
-                <div class="mb-4 pt-1">
-                    <label class="form-label" for="email">Email</label>
-                    <input type="email" class="form-control" name="email" value="" id="email" autocomplete="email" required>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label" for="password">Kata Sandi</label>
-                    <input type="password" class="form-control" name="password" id="password" autocomplete="current-password" required>
-                </div>
-
-                <button type="submit" class="btn w-100 btn-primary fsemibold">Masuk</button>
-            </form>
-
-            <footer class="mt-auto mt-lg-5 pt-lg-3 pb-4 text-center">
-                © {{ date('Y') }}, <b>PT. Angkasa Adibayu Buana</b>
-            </footer>
-        </main>         --}}
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -119,45 +94,89 @@
     @include('partials.toast')
 
     <script>
-        $buttonReset = document.getElementById('resetButton');
-        $form = document.getElementById('formReset');
-        console.log($buttonReset);
-        $buttonReset.addEventListener('click', function() {
-            let data = $form.serialize();
+
+$(document).ready(function () {
+        $("#resetButton").click(function () {
+            // Disable the button to prevent multiple submissions
+            $(this).prop("disabled", true);
+
+            // Get form data
+            var formData = $("#formReset").serialize();
+
+            // Send AJAX request to reset API endpoint
             $.ajax({
-                type: "method",
+                type: "POST",
                 url: "{{ route('auth.reset') }}",
-                data: data,
-                success: function(response) {
+                data: formData,
+                success: function (response) {
+                    // Enable the button
+                    $("#resetButton").prop("disabled", false);
+
+                    // Show SweetAlert with the response message and new password
                     Swal.fire({
                         icon: 'success',
-                        title: 'Berhasil',
-                        text: 'Silahkan cek email anda untuk mengganti password',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
+                        title: response.message,
+                        html: `<p>Password baru: <span style="user-select: text;">${response.data}</span></p>`,
+                        allowOutsideClick: true, // Allow outside click to close the modal
+                    });
                 },
-                error: function(response) {
+                error: function (error) {
+                    // Enable the button
+                    $("#resetButton").prop("disabled", false);
+
+                    // Show SweetAlert with the error message
                     Swal.fire({
                         icon: 'error',
-                        title: 'Gagal',
-                        text: 'NIP tidak ditemukan',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-
-                }
+                        title: 'Error',
+                        text: error.responseJSON.error,
+                        allowOutsideClick: true, // Allow outside click to close the modal
+                    });
+                },
             });
         });
+    });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('.form').addEventListener('submit', function(ev) {
-                const btn = document.querySelector('.btn');
 
-                btn.disabled = true;
-                btn.classList.toggle('btn-loading');
-            });
-        });
+
+        // $buttonReset = document.getElementById('resetButton');
+        // $form = document.getElementById('formReset');
+        // console.log($buttonReset);
+        // $buttonReset.addEventListener('click', function() {
+        //     let data = $form.serialize();
+        //     $.ajax({
+        //         type: "method",
+        //         url: "{{ route('auth.reset') }}",
+        //         data: data,
+        //         success: function(response) {
+        //             Swal.fire({
+        //                 icon: 'success',
+        //                 title: 'Berhasil',
+        //                 text: 'Silahkan cek email anda untuk mengganti password',
+        //                 showConfirmButton: false,
+        //                 timer: 1500
+        //             })
+        //         },
+        //         error: function(response) {
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Gagal',
+        //                 text: 'NIP tidak ditemukan',
+        //                 showConfirmButton: false,
+        //                 timer: 1500
+        //             })
+
+        //         }
+        //     });
+        // });
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     document.querySelector('.form').addEventListener('submit', function(ev) {
+        //         const btn = document.querySelector('.btn');
+
+        //         btn.disabled = true;
+        //         btn.classList.toggle('btn-loading');
+        //     });
+        // });
     </script>
 </body>
 

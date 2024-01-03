@@ -45,25 +45,25 @@
             <div class="px-4 pt-4 pb-3 flex-shrink-0 d-flex gap-3 align-items-center">
                 <div class="position-relative search-box" style="margin-bottom: 0">
                     <ion-icon name="search" class="f24 position-absolute"></ion-icon>
-                    <input type="text" id="search-data" class="form-control" placeholder="Ketik untuk mencari...">
+                    <input type="text" id="search-data-table" class="form-control" placeholder="Ketik untuk mencari...">
                 </div>
 
                 <div class="d-flex">
                     <div class="pt-4 pb-3 flex-shrink-0">
                         <div class="position-relative search-box">
-                            <input type="date" id="start_date" class="form-control" name="start_date" placeholder="">
+                            <input type="date" id="start_date_table" class="form-control" name="start_date" placeholder="">
                         </div>
                     </div>
                     <div class="px-2 pt-4 pb-3 flex-shrink-0">
                         <div class="position-relative search-box">
-                            <input type="date" id="end_date" class="form-control" name="end_date" placeholder="">
+                            <input type="date" id="end_date_table" class="form-control" name="end_date" placeholder="">
                         </div>
                     </div>
                     <div class="pt-4 pb-3 flex-shrink-0">
-                        <button id="btn-filter" class="btn btn-primary">Filter</button>
+                        <button id="btn-filter-table" class="btn btn-primary">Filter</button>
                     </div>
                     <div class="pt-4 pb-3 ms-2 flex-shrink-0">
-                        <button id="btn-cancel" class="btn btn-primary">Cancel</button>
+                        <button id="btn-cancel-table" class="btn btn-primary">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -118,55 +118,48 @@
         var doneTypeInterval = 500;
         var typingTimer;
 
-        document.getElementById('search-data').addEventListener('input', getInputSearchValue);
+        document.getElementById('search-data-table').addEventListener('input', getInputSearchValueTable);
+        document.getElementById('start_date_table').addEventListener('input', getInputDateValuesTable);
+        document.getElementById('end_date_table').addEventListener('input', getInputDateValuesTable);
+        document.getElementById('btn-filter-table').addEventListener('click', findDataOnTable);
+        document.getElementById('btn-cancel-table').addEventListener('click', cancelDataOnTable);
 
-        document.getElementById('start_date').addEventListener('input', getInputDateValues);
-        document.getElementById('end_date').addEventListener('input', getInputDateValues);
-        document.getElementById('btn-filter').addEventListener('click', findDataOnTable);
-        document.getElementById('btn-cancel').addEventListener('click', cancelData);
-
-        function getInputDateValues() {
-            filteredDate.startDate = document.getElementById('start_date').value;
-            filteredDate.endDate = document.getElementById('end_date').value;
+        function getInputDateValuesTable() {
+            filteredDate.startDate = document.getElementById('start_date_table').value;
+            filteredDate.endDate = document.getElementById('end_date_table').value;
         }
 
-        function getInputSearchValue() {
+        function getInputSearchValueTable() {
             clearTimeout(typingTimer);
-            searchValue = document.getElementById('search-data').value;
+            searchValue = document.getElementById('search-data-table').value;
             typingTimer = setTimeout(() => {
-                // showData(0, 0, searchValue.trim().toLowerCase());
-                // findDataOnTable(searchValue.trim().toLowerCase());
                 saleNo = searchValue.trim().toLowerCase();
             }, doneTypeInterval);
         }
 
-        console.log(saleNo);
         function findDataOnTable() {
             if (filteredDate.startDate && filteredDate.endDate) {
                 var fromDate = filteredDate.startDate;
                 var toDate = filteredDate.endDate;
-
-                showData(fromDate, toDate);
+                showData(fromDate, toDate, saleNo);
             } else if (saleNo) {
-                console.log(saleNo);
+                showData(null, null, saleNo);
             } else {
                 showData();
             }
         }
 
-        function cancelData() {
-            document.getElementById('start_date').value = '';
-            document.getElementById('end_date').value = '';
-
+        function cancelDataOnTable() {
+            document.getElementById('start_date_table').value = '';
+            document.getElementById('end_date_table').value = '';
             showData();
         }
 
         function showData(fromDate, toDate, searchValue) {
             $('#report-table').DataTable().destroy();
-            // console.log(searchValue);
 
             $.ajax({
-                url: `{{ route('report.query') }}?start_date=${fromDate?? 0}&end_date=${toDate?? 0}&sale_no=${searchValue?? 0}`,
+                url: `{{ route('report.query') }}?start_date=${fromDate || 0}&end_date=${toDate || 0}&sale_no=${searchValue || 0}`,
                 type: "GET",
                 dataType: "JSON",
                 success: function (res) {
@@ -178,16 +171,15 @@
                     var rotationTable = $('#report-table').DataTable({
                         data: originalData,
                         columns: [
-                            // {data: '1', name: 'no'},
-                            {data: 'sale_no', name: 'nomor_pembelian'},
-                            {data: 'subtotal', name: 'subtotal'},
-                            {data: 'grandtotal', name: 'grandtotal'},
-                            {data: 'total_qty', name: 'total_barang'},
-                            {data: 'discount', name: 'discount'},
-                            {data: 'payment', name: 'pembayaran'},
-                            {data: 'cash_amount', name: 'uang_dibayar'},
-                            {data: 'status', name: 'status'},
-                            {data: 'created_at', name: 'tanggal_pembelian'},
+                            { data: 'sale_no', name: 'nomor_pembelian' },
+                            { data: 'subtotal', name: 'subtotal' },
+                            { data: 'grandtotal', name: 'grandtotal' },
+                            { data: 'total_qty', name: 'total_barang' },
+                            { data: 'discount', name: 'discount' },
+                            { data: 'payment', name: 'pembayaran' },
+                            { data: 'cash_amount', name: 'uang_dibayar' },
+                            { data: 'status', name: 'status' },
+                            { data: 'created_at', name: 'tanggal_pembelian' },
                         ],
                         'searching': false,
                         'responsive': (screen.width > 960) ? true : false,
@@ -200,6 +192,7 @@
         }
 
         showData();
+
 
     </script>
 

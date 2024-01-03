@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionReportController;
@@ -20,6 +21,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(function () {
+    // Route::match(['get', 'post'], 'login', 'authenticate')->name('login');
+    Route::post('reset', 'reset')->name('reset');
+    // Route::get('logout', 'logout')->name('logout');
 });
 
 Route::controller(ProductController::class)->prefix('product')->name('product.')->group(function () {

@@ -134,17 +134,6 @@ class TransactionReportController extends Controller
                 }
             });
 
-        // $sale = DB::table('sale_invoice_hdr')
-        //     ->orderBy($orderBy, $order)
-        //     ->where(function($query) use ($startDate, $endDate) {
-        //         if ($startDate) {
-        //             $query->whereDate('sale_invoice_hdr.created_at', '>=', $startDate);
-        //         }
-        //         if ($endDate) {
-        //             $query->whereDate('sale_invoice_hdr.created_at', '<=', $endDate);
-        //         }
-        //     });
-
         $totalIncome = DB::table('sale_invoice_hdr')
             ->orderBy($orderBy, $order)
             ->join('sale_invoice_line', 'sale_invoice_line.hdr_id', '=', 'sale_invoice_hdr.id')

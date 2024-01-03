@@ -67,9 +67,13 @@ class CategoryController extends Controller
         $keyword = $request->keyword;
         $order = $request->order?? 'desc';
         $orderBy = $request->orderBy?? 'created_at';
+        $name = $request->name?? 0;
 
         $category = Category::select('id', 'name', 'created_at', 'updated_at')
-            ->orderBy($orderBy, $order);
+            ->orderBy($orderBy, $order)
+            ->where(function ($query) use ($name) {
+                if ($name) $query->where('name', 'LIKE', '%' . $name . '%');
+            });
 
         if ($limit && is_numeric($limit))   $category->limit($limit);
         if ($offset && is_numeric($offset)) $category->offset($offset);

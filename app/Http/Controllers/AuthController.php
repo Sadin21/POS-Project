@@ -37,25 +37,25 @@ class AuthController extends Controller
             $this->validate($request, [
                 'nip' => 'required|exists:users,nip',
             ]);
-
+    
             $nip = $request->nip;
-
+    
             $newPassword = Str::random(10);
             $user = User::find($nip);
             if (!$user) {
-                return response()->json(['message' => 'Data tidak ditemukan'], 404);
+                return response()->json(['error' => 'Data tidak ditemukan'], 404);
             }
-            if ($user->role_id !== 2) {
-                return response()->json(['message' => 'Anda tidak memiliki akses mengubah password'], 403);
-            }
+
             $user->password = bcrypt($newPassword);
             $user->save();
+            
             return response()->json([
+                'success' => true,
                 'message' => 'Password berhasil direset',
                 'data' => $newPassword,
             ]);
         } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Password gagal direset');
+            return response()->json(['error' => 'Password gagal direset'], 500);
         }
     }
 

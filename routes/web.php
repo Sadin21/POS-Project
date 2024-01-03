@@ -25,7 +25,7 @@ Route::get('/', function () {
 
 Route::controller(AuthController::class)->name('auth.')->group(function () {
     Route::match(['get', 'post'], 'login', 'authenticate')->name('login');
-    Route::post('reset', 'reset')->name('reset');
+    // Route::post('reset', 'reset')->name('reset');
     Route::get('logout', 'logout')->name('logout');
 });
 

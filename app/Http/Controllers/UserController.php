@@ -132,11 +132,23 @@ class UserController extends Controller
         $keyword = $request->keyword;
         $order = $request->order ?? 'desc';
         $orderBy = $request->orderBy ?? 'created_at';
+        $name = $request->name ?? 0;
+        $nip = $request->nip ?? 0;
 
         $user = DB::table('users')
             ->join('roles', 'users.role_id', '=', 'roles.role_id')
             ->select('users.nip', 'users.name', 'users.username', 'users.address', 'users.phone', 'users.photo', 'users.role_id', 'users.created_at', 'users.updated_at', 'roles.name as role_name')
-            ->orderBy($orderBy, $order);
+            ->orderBy($orderBy, $order)
+            ->where(function ($query) use ($name) {
+                if ($name) {
+                    $query->where('users.name', 'LIKE', '%' . $name . '%');
+                }
+            })
+            ->orWhere(function ($query) use ($nip) {
+                if ($nip) {
+                    $query->where('users.nip', 'LIKE', '%' . $nip . '%');
+                }
+            });
 
         if ($limit && is_numeric($limit)) {
             $user->limit($limit);

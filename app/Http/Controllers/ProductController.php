@@ -115,11 +115,27 @@ class ProductController extends Controller
         $keyword = $request->keyword;
         $order = $request->order?? 'desc';
         $orderBy = $request->orderBy?? 'created_at';
+        $name = $request->name?? 0;
+        $code = $request->code?? 0;
 
         $product = DB::table('products')
                         ->join('categories', 'products.category_id', '=', 'categories.id')
                         ->select('products.id', 'products.name', 'products.code', 'products.photo', 'products.sale_price', 'products.qty', 'products.available_qty', 'products.buy_price', 'products.created_at', 'products.updated_at', 'categories.name as category_name')
-                        ->orderBy($orderBy, $order);
+                        ->orderBy($orderBy, $order)
+                        ->where(function ($query) use ($name) {
+                            if ($name) {
+                                $query->where('products.name', 'LIKE', '%' . $name . '%');
+                            }
+                        })
+                        ->orWhere(function ($query) use ($code) {
+                            if ($code) {
+                                $query->where('products.code', 'LIKE', '%' . $code . '%');
+                            }
+                        });
+                        // ->where(function ($u) use ($name, $code) {
+                        //     if ($name) $u->where('products.name', 'LIKE', '%'. $name . '%');
+                        //     if ($code) $u->where('products.code', 'LIKE', '%'. $code . '%');
+                        // });
 
         if ($limit && is_numeric($limit))   $product->limit($limit);
         if ($offset && is_numeric($offset)) $product->offset($offset);
