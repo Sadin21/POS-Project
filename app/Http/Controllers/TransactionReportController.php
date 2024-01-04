@@ -78,21 +78,40 @@ class TransactionReportController extends Controller
 
     public function generatePdf(Request $request)
     {
-        $startDate = $request->start_date;
-        $endDate = $request->end_date;
+        $startDate = $request->start_date ?? 0;
+        $endDate = $request->end_date ?? 0;
+        $saleNo = $request->sale_no ?? 0;
 
         $mpdf = new \Mpdf\Mpdf();
-        $data = SaleInvoiceHdr::orderBy('created_at', 'desc')
-            ->where(function($query) use ($startDate, $endDate) {
+        $data = DB::table('sale_invoice_hdr')
+            ->join('sale_invoice_line', 'sale_invoice_line.hdr_id', '=', 'sale_invoice_hdr.id')
+            ->join('products', 'products.id', '=', 'sale_invoice_line.product_id')
+            ->select(
+                'sale_invoice_hdr.*',
+                'products.name as product_name',
+                'products.buy_price as product_buy_price',
+                'products.sale_price as product_sale_price',
+                'sale_invoice_line.qty',
+                'sale_invoice_line.subtotal'
+            )
+            ->where(function ($query) use ($startDate, $endDate) {
                 if ($startDate) {
-                    $query->whereDate('created_at', '>=', $startDate);
+                    $query->whereDate('sale_invoice_hdr.created_at', '>=', $startDate);
                 }
                 if ($endDate) {
-                    $query->whereDate('created_at', '<=', $endDate);
+                    $query->whereDate('sale_invoice_hdr.created_at', '<=', $endDate);
                 }
             })
-            ->get();
-        $mpdf->WriteHTML(view('pages.master.report.pdf-view', ['data' => $data]));
+            ->where(function ($query) use ($saleNo) {
+                if ($saleNo) {
+                    $query->where('sale_invoice_hdr.sale_no', '=', $saleNo);
+                }
+            })
+            ->get(); 
+
+        $htmlContent = view('pages.master.report.pdf-view', ['data' => $data])->render();
+        $mpdf->WriteHTML($htmlContent);
+
         $fileName = 'laporan-transaksi-' . date('Y-m-d') . '.pdf';
         $mpdf->Output($fileName, 'D');
     }
@@ -148,6 +167,11 @@ class TransactionReportController extends Controller
                 if ($endDate) {
                     $query->whereDate('sale_invoice_hdr.created_at', '<=', $endDate);
                 }
+            })
+            ->where(function($query) use ($saleNo) {
+                if ($saleNo) {
+                    $query->where('sale_invoice_hdr.sale_no', '=', $saleNo);
+                }
             });
 
         $totalSaledQty = DB::table('sale_invoice_hdr')
@@ -161,6 +185,11 @@ class TransactionReportController extends Controller
                 }
                 if ($endDate) {
                     $query->whereDate('sale_invoice_hdr.created_at', '<=', $endDate);
+                }
+            })
+            ->where(function($query) use ($saleNo) {
+                if ($saleNo) {
+                    $query->where('sale_invoice_hdr.sale_no', '=', $saleNo);
                 }
             });
 

@@ -24,23 +24,25 @@
     <table>
         <tr>
             <th>Nomor Pembelian</th>
-            <th>Subtotal</th>
-            <th>Grandtotal</th>
+            <th>Nama Barang</th>
             <th>Total Barang</th>
-            <th>Discount</th>
+            <th>Harga Beli</th>
+            <th>Harga Jual</th>
             <th>Pembayaran</th>
             <th>Uang Dibayar</th>
+            <th>Kasir</th>
             <th>Tanggal Pembelian</th>
         </tr>
         @foreach($data as $data)
         <tr>
             <td>{{ $data->sale_no }}</td>
-            <td>Rp. {{ number_format($data->subtotal, 0, ',', '.') }}</td>
-            <td>Rp. {{ number_format($data->grandtotal, 0, ',', '.') }}</td>
+            <td>{{ $data->product_name }}</td>
             <td>{{ $data->total_qty }}</td>
-            <td>{{ $data->discount }}</td>
+            <td>Rp. {{ number_format($data->product_buy_price, 0, ',', '.') }}</td>
+            <td>Rp. {{ number_format($data->product_sale_price, 0, ',', '.') }}</td>
             <td>{{ $data->payment }}</td>
-            <td>Rp. {{ number_format($data->cash_amount, 0, ',', '.') }}</td>
+            <td>Rp. {{ number_format($data->change_amount, 0, ',', '.') }}</td>
+            <td>{{ $data->cashier }}</td>
             <td>{{ $data->created_at }}</td>
         </tr>
         @endforeach

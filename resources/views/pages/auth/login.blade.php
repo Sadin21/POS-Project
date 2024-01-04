@@ -74,7 +74,12 @@
                         <div class="mb-3">
                             <label for="username" class="form-label">NIP</label>
                             <input type="text" class="form-control" id="nip" name="nip"
-                                placeholder="Enter NIP">
+                                placeholder="Masukkan NIP">
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nomor Telepon</label>
+                            <input type="text" class="form-control" id="phone" name="phone"
+                                placeholder="Masukkan Nomor HP">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -95,46 +100,39 @@
 
     <script>
 
-$(document).ready(function () {
-        $("#resetButton").click(function () {
-            // Disable the button to prevent multiple submissions
-            $(this).prop("disabled", true);
+        $(document).ready(function () {
+            $("#resetButton").click(function () {
+                $(this).prop("disabled", true);
 
-            // Get form data
-            var formData = $("#formReset").serialize();
+                var formData = $("#formReset").serialize();
 
-            // Send AJAX request to reset API endpoint
-            $.ajax({
-                type: "POST",
-                url: "{{ route('auth.reset') }}",
-                data: formData,
-                success: function (response) {
-                    // Enable the button
-                    $("#resetButton").prop("disabled", false);
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('auth.reset') }}",
+                    data: formData,
+                    success: function (response) {
+                        $("#resetButton").prop("disabled", false);
 
-                    // Show SweetAlert with the response message and new password
-                    Swal.fire({
-                        icon: 'success',
-                        title: response.message,
-                        html: `<p>Password baru: <span style="user-select: text;">${response.data}</span></p>`,
-                        allowOutsideClick: true, // Allow outside click to close the modal
-                    });
-                },
-                error: function (error) {
-                    // Enable the button
-                    $("#resetButton").prop("disabled", false);
+                        Swal.fire({
+                            icon: 'success',
+                            title: response.message,
+                            html: `<p>Password baru: <span style="user-select: text;">${response.data}</span></p>`,
+                            allowOutsideClick: true, 
+                        });
+                    },
+                    error: function (error) {
+                        $("#resetButton").prop("disabled", false);
 
-                    // Show SweetAlert with the error message
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: error.responseJSON.error,
-                        allowOutsideClick: true, // Allow outside click to close the modal
-                    });
-                },
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: error.responseJSON.error,
+                            allowOutsideClick: true, 
+                        });
+                    },
+                });
             });
         });
-    });
 
 
 

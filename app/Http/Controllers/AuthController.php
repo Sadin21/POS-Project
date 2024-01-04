@@ -36,6 +36,7 @@ class AuthController extends Controller
         try {
             $this->validate($request, [
                 'nip' => 'required|exists:users,nip',
+                'phone' => 'required|exists:users,phone',
             ]);
     
             $nip = $request->nip;

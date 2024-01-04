@@ -70,7 +70,8 @@
 
 
             <div class="px-4 pt-4 pb-3 flex-shrink-0">
-                <a href="{{ route('transaction.pdf') }}" id="" class="btn btn-primary">Download Laporan</a>
+                <a id="download-pdf" class="btn btn-primary">Download Laporan</a>
+                {{-- <a href="{{ route('transaction.pdf') }}" id="download-pdf" class="btn btn-primary">Download Laporan</a> --}}
             </div>
         </div>
 
@@ -78,15 +79,13 @@
             <table class="table w-100 border" id="report-table" style="border-radius: 10px">
                 <thead>
                     <tr style="background-color: #F8F8F8">
-                        {{-- <th>No</th> --}}
                         <th>Nomor Pembelian</th>
-                        {{-- <th>Subtotal</th> --}}
-                        <th>Grandtotal</th>
+                        <th>Nama Barang</th>
                         <th>Total Barang</th>
-                        <th>Discount</th>
+                        <th>Harga Beli</th>
+                        <th>Harga Jual</th>
                         <th>Pembayaran</th>
                         <th>Uang Dibayar</th>
-                        <th>Status</th>
                         <th>Kasir</th>
                         <th>Tanggal Pembelian</th>
                     </tr>
@@ -112,6 +111,7 @@
     @include('partials.ag-grid.aggrid')
     @include('partials.ag-grid.aggrid-default-user-btn')
 
+    {{-- script for table --}}
     <script>
 
         var filteredDate = {};
@@ -124,6 +124,8 @@
         document.getElementById('end_date_table').addEventListener('input', getInputDateValuesTable);
         document.getElementById('btn-filter-table').addEventListener('click', findDataOnTable);
         document.getElementById('btn-cancel-table').addEventListener('click', cancelDataOnTable);
+
+        document.getElementById('download-pdf').addEventListener('click', downloadPdf);
 
         function getInputDateValuesTable() {
             filteredDate.startDate = document.getElementById('start_date_table').value;
@@ -153,7 +155,12 @@
         function cancelDataOnTable() {
             document.getElementById('start_date_table').value = '';
             document.getElementById('end_date_table').value = '';
+            document.getElementById('search-data-table').value = '';
             showData();
+        }
+
+        function downloadPdf() {
+            window.location.href = `{{ route('transaction.pdf') }}?start_date=${filteredDate.startDate || 0}&end_date=${filteredDate.endDate || 0}&sale_no=${saleNo || 0}`;
         }
 
         function showData(fromDate, toDate, searchValue) {
@@ -172,14 +179,13 @@
                     var rotationTable = $('#report-table').DataTable({
                         data: originalData,
                         columns: [
-                            { data: 'sale_no', name: 'nomor_pembelian' },
-                            // { data: 'subtotal', name: 'subtotal' },
-                            { data: 'grandtotal', name: 'grandtotal' },
-                            { data: 'total_qty', name: 'total_barang' },
-                            { data: 'discount', name: 'discount' },
+                            { data: 'sale_no', name: 'nomor pembelian' },
+                            { data: 'product_name', name: 'nama barang' },
+                            { data: 'total_qty', name: 'total barang' },
+                            { data: 'product_buy_price', name: 'harga bei' },
+                            { data: 'product_sale_price', name: 'harga jual' },
                             { data: 'payment', name: 'pembayaran' },
-                            { data: 'cash_amount', name: 'uang_dibayar' },
-                            { data: 'status', name: 'status' },
+                            { data: 'change_amount', name: 'uang dibayar' },
                             { data: 'cashier', name: 'kasir' },
                             { data: 'created_at', name: 'tanggal_pembelian' },
                         ],
