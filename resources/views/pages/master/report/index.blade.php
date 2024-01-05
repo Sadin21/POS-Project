@@ -97,11 +97,11 @@
             <div class="row">
                 <div class="col d-flex">
                     <p>Total barang terjual</p>
-                    <p class="ms-2 fw-bold" id="totalSaledQty">300</p>
+                    <p class="ms-2 fw-bold" id="totalSaledQty">0</p>
                 </div>
                 <div class="col d-flex">
                     <p>Keuntungan</p>
-                    <p class="ms-2 fw-bold" id="totalIncome">300</p>
+                    <p class="ms-2 fw-bold" id="totalIncome">0</p>
                 </div>
             </div>
 
