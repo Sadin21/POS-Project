@@ -109,7 +109,51 @@ class TransactionReportController extends Controller
             })
             ->get(); 
 
-        $htmlContent = view('pages.master.report.pdf-view', ['data' => $data])->render();
+        $totalIncome = DB::table('sale_invoice_hdr')
+            ->join('sale_invoice_line', 'sale_invoice_line.hdr_id', '=', 'sale_invoice_hdr.id')
+            ->join('products', 'products.id', '=', 'sale_invoice_line.product_id')
+            ->select(
+                DB::raw('(products.sale_price - products.buy_price) as net_income')
+            )
+            ->where(function($query) use ($startDate, $endDate) {
+                if ($startDate) {
+                    $query->whereDate('sale_invoice_hdr.created_at', '>=', $startDate);
+                }
+                if ($endDate) {
+                    $query->whereDate('sale_invoice_hdr.created_at', '<=', $endDate);
+                }
+            })
+            ->where(function($query) use ($saleNo) {
+                if ($saleNo) {
+                    $query->where('sale_invoice_hdr.sale_no', '=', $saleNo);
+                }
+            });
+
+        $totalSaledQty = DB::table('sale_invoice_hdr')
+            ->select(
+                DB::raw('SUM(sale_invoice_hdr.total_qty) as total_qty')
+            )
+            ->where(function($query) use ($startDate, $endDate) {
+                if ($startDate) {
+                    $query->whereDate('sale_invoice_hdr.created_at', '>=', $startDate);
+                }
+                if ($endDate) {
+                    $query->whereDate('sale_invoice_hdr.created_at', '<=', $endDate);
+                }
+            })
+            ->where(function($query) use ($saleNo) {
+                if ($saleNo) {
+                    $query->where('sale_invoice_hdr.sale_no', '=', $saleNo);
+                }
+            });
+
+        // dd($totalSaledQty->get()->sum('total_qty'));
+        // dd($totalIncome->get()->sum('net_income'));
+
+        $htmlContent = view('pages.master.report.pdf-view', [
+            'data' => $data, 
+            'totalIncome' => $totalIncome->get()->sum('net_income'), 
+            'totalSaledQty' => $totalSaledQty->get()->sum('total_qty')])->render();
         $mpdf->WriteHTML($htmlContent);
 
         $fileName = 'laporan-transaksi-' . date('Y-m-d') . '.pdf';
@@ -137,7 +181,8 @@ class TransactionReportController extends Controller
                 'products.buy_price as product_buy_price',
                 'products.sale_price as product_sale_price',
                 'sale_invoice_line.qty',
-                'sale_invoice_line.subtotal'
+                'sale_invoice_line.subtotal',
+                DB::raw('(products.sale_price - products.buy_price) as income')
             )
             ->where(function($query) use ($startDate, $endDate) {
                 if ($startDate) {

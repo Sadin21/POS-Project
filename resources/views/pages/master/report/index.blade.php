@@ -85,7 +85,7 @@
                         <th>Harga Beli</th>
                         <th>Harga Jual</th>
                         <th>Pembayaran</th>
-                        <th>Uang Dibayar</th>
+                        <th>Keuntungan</th>
                         <th>Kasir</th>
                         <th>Tanggal Pembelian</th>
                     </tr>
@@ -185,7 +185,7 @@
                             { data: 'product_buy_price', name: 'harga bei' },
                             { data: 'product_sale_price', name: 'harga jual' },
                             { data: 'payment', name: 'pembayaran' },
-                            { data: 'change_amount', name: 'uang dibayar' },
+                            { data: 'income', name: 'keuntungan' },
                             { data: 'cashier', name: 'kasir' },
                             { data: 'created_at', name: 'tanggal_pembelian' },
                         ],

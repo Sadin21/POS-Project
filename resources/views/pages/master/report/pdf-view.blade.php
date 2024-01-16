@@ -23,6 +23,7 @@
     <h2>Laporan Penjualan</h2>
     <table>
         <tr>
+            <th>No</th>
             <th>Nomor Pembelian</th>
             <th>Nama Barang</th>
             <th>Total Barang</th>
@@ -35,6 +36,7 @@
         </tr>
         @foreach($data as $data)
         <tr>
+            <td>{{ $loop->iteration }}</td>
             <td>{{ $data->sale_no }}</td>
             <td>{{ $data->product_name }}</td>
             <td>{{ $data->total_qty }}</td>
@@ -46,6 +48,16 @@
             <td>{{ $data->created_at }}</td>
         </tr>
         @endforeach
+    </table>
+    <table style="margin-top: 50px">
+        <tr>
+            <td>Total barang terjual</td>
+            <td>{{ $totalSaledQty }}</td>
+        </tr>
+        <tr>
+            <td>Keuntungan</td>
+            <td>{{ $totalIncome }}</td>
+        </tr>
     </table>
     </body>
 </html>
