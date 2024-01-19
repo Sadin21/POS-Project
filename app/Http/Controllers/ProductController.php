@@ -109,6 +109,14 @@ class ProductController extends Controller
         return response()->json([ 'message' => 'Data berhasil dihapus' ]);
     }
 
+    public function getDataById($code)
+    {
+        // dd($request->code);
+        $product = Product::where('code', $code)->get();
+
+        return response()->json($product);
+    }
+
     public function query(Request $request): JsonResponse {
         $limit = $request->limit;
         $offset = $request->offset;

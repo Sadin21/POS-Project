@@ -184,13 +184,36 @@
             });
 
             $(document).on("change", "input[name='jumlah']", function () {
-                const inputId = $(this).attr("id"); // Mengambil ID input yang diubah
-                const code = inputId.split("-")[2]
-                const rowId = "row-" + code; // Mengambil ID row yang diubah
+                const inputField = $(this); 
+
+                const inputId = inputField.attr("id");
+                const code = inputId.split("-")[2];
+
+                $.ajax({
+                    type: "GET",
+                    url: `api/product/${code}`,
+                    success: function (response) {
+                        const qty = response[0].available_qty;
+                        if (inputField.val() > qty) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Peringatan',
+                                text: 'Jumlah barang melebihi stok!',
+                            });
+                            inputField.val(1);
+                            return;
+                        }
+                    },
+                    error: function (error) {
+                        alert("Terjadi kesalahan saat menyimpan data.\n" + error.responseText);
+                    }
+                });
+
+                const rowId = "row-" + code;
                 const rowElement = $('#' + rowId);
-                const subtotal = $(this).val() * rowElement.data("price");
+                const subtotal = inputField.val() * rowElement.data("price");
                 rowElement.data('total-price', subtotal);
-                rowElement.data('qty', $(this).val());
+                rowElement.data('qty', inputField.val());
 
                 const subtotalElement = $('#text-total-' + rowId)
                 subtotalElement.text(subtotal);
@@ -199,9 +222,8 @@
 
             $(document).on("click", "button[id^='btn-delete-']", function () {
                 const buttonId = $(this).data("row-id");
-                const rowId = buttonId.replace("btn-", ""); // Mengambil ID baris dari tombol
+                const rowId = buttonId.replace("btn-", "");
 
-                // Hapus baris dengan ID yang sesuai dari keranjang
                 $("#" + rowId).remove();
                 calculate();
             });
@@ -216,20 +238,28 @@
             $("#btn-save").on("click", function () {
                 const dataCart = [];
 
-                // Check if #cart tr has any value
                 if ($("#cart tr").length === 0) {
-                    // Display SweetAlert if there is no data
                     Swal.fire({
                         icon: 'warning',
                         title: 'Oops...',
                         text: 'Tidak ada data barang!',
                     });
-                    return; // Stop further execution
+                    return; 
                 }
 
                 const payment = $("#payment").val();
                 const pay = $("#input-pay").val();
                 const returnVal = $("#input-return").val();
+
+                if (pay < $("#text-total").text()) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan',
+                        text: 'Jumlah uang pembayaran kurang',
+                    });
+                    $("#input-pay").val("");
+                    return; 
+                }
 
                 if (!payment || !pay || !returnVal) {
                     Swal.fire({

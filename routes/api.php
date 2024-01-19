@@ -31,6 +31,7 @@ Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(f
 
 Route::controller(ProductController::class)->prefix('product')->name('product.')->group(function () {
     Route::get('query', 'query')->name('query');
+    Route::get('/{code}', 'getDataById')->name('getDataById');
     Route::delete('delete/{id}', 'destroy')->name('delete');
 });
 

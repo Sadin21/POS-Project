@@ -17,6 +17,13 @@ class SaleController extends Controller
         return view('pages.sale.index', compact('products'));
     }
 
+    // public function getDataById(Request $request)
+    // {
+    //     $product = Product::query()->where('code', $request->code)->firstOrFail();
+
+    //     return response()->json($product);
+    // }
+
     public function store(Request $request)
     {
         $subtotal = 0;

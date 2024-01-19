@@ -37,6 +37,7 @@ Route::controller(SaleController::class)->prefix('sale')->name('sale.')->group(f
 
 Route::controller(ProductController::class)->prefix('product')->name('product.')->group(function () {
     Route::get('/', 'index')->name('index');
+    // Route::get('/{id}', 'getById')->name('getById');
     Route::post('import', 'importExcel')->name('import');
     Route::match(['get', 'post'], 'store', 'store')->name('store');
     Route::match(['get', 'post'], '{id}', 'update')->name('update');
