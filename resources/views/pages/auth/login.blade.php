@@ -27,6 +27,9 @@
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100" style="background: #308EE5">
@@ -50,8 +53,35 @@
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password"
-                            placeholder="Enter password">
+                        <div class="input-group mb-3">
+                            <input type="password" class="form-control" name="password" id="password-form" placeholder="Password" aria-label="password" aria-describedby="basic-addon1">
+                            <span class="input-group-text" id="basic-addon1" onclick="passwordShowHide()">
+                                <ion-icon name="eye-outline" id="show_eye"></ion-icon>
+                                <ion-icon name="eye-off-outline" style="display: none;" id="hide_eye"></ion-icon>
+                            </span>
+                        </div>
+
+                        <!-- <div class="input-group mb-3">
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="Enter password">
+                            <div class="input-group-append">
+                                <span class="input-group-text" onclick="password_show_hide();">
+                                <ion-icon name="eye-outline" id="show_eye"></ion-icon>
+                                <ion-icon name="eye-off-outline d-none" id="hide_eye"></ion-icon>
+                                </span>
+                            </div>
+                        </div> -->
+
+                        <!-- <div class="input-group">
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="Enter password">
+                                <div class="input-group-append">
+                                <span class="input-group-text" onclick="password_show_hide();">
+                                    <ion-icon name="eye-outline" id="show_eye"></ion-icon>
+                                    <ion-icon name="eye-off-outline d-none" id="hide_eye"></ion-icon>
+                                </span>
+                            </div>
+                        </div> -->
                     </div>
                     <button type="submit" class="btn btn-primary w-100 mt-3 ">Login</button>
                 </form>
@@ -133,6 +163,24 @@
                 });
             });
         });
+
+        function passwordShowHide() {
+            var form = document.getElementById('password-form');
+            var show_eye = document.getElementById('show_eye');
+            var hide_eye = document.getElementById('hide_eye');
+
+            hide_eye.style.display = "none";
+
+            if (form.type === "password") {
+                form.type = "text";
+                show_eye.style.display = "none";
+                hide_eye.style.display = "block";
+            } else {
+                form.type = "password";
+                show_eye.style.display = "block";
+                hide_eye.style.display = "none";
+            }
+        }
 
 
 
