@@ -56,8 +56,8 @@
                         <div class="input-group mb-3">
                             <input type="password" class="form-control" name="password" id="password-form" placeholder="Password" aria-label="password" aria-describedby="basic-addon1">
                             <span class="input-group-text" id="basic-addon1" onclick="passwordShowHide()">
-                                <ion-icon name="eye-outline" id="show_eye"></ion-icon>
-                                <ion-icon name="eye-off-outline" style="display: none;" id="hide_eye"></ion-icon>
+                                <ion-icon name="eye-off-outline" id="show_eye"></ion-icon>
+                                <ion-icon name="eye-outline" style="display: none;" id="hide_eye"></ion-icon>
                             </span>
                         </div>
 

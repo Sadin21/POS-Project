@@ -75,11 +75,12 @@
                     <div class="d-flex flex-column rounded-2 p-3 pb-3" style="background: #DFDFDF">
                         <div class="d-flex justify-content-between">
                             <h6>Tanggal</h6>
-                            <h6>03 Oktober 2023</h6>
+                            <h6 id="dateNow">Tanggal</h6>
+                            <!-- <p id="p1">Hello World!</p> -->
                         </div>
                         <div class="d-flex justify-content-between mt-3">
                             <h6>Waktu</h6>
-                            <h6>20.53</h6>
+                            <h6 id="timeNow">20.53</h6>
                         </div>
                         <div class="d-flex justify-content-between mt-3">
                             <h6>Kasir</h6>
@@ -137,7 +138,16 @@
     {{--    @include('partials.ag-grid.aggrid-default-btn')--}}
 
     <script>
+
+        
         $(document).ready(function () {
+
+            let currentDate = new Date().toJSON().slice(0, 10);
+            let date = new Date();
+
+            document.getElementById('dateNow').innerText = currentDate;
+            document.getElementById('timeNow').innerText = date.toLocaleTimeString().slice(0, 4);
+
             function calculate() {
                 const rowElements = $("#cart tr")
                 let totalProduct = 0;
