@@ -38,9 +38,9 @@ class AuthController extends Controller
                 'nip' => 'required|exists:users,nip',
                 'phone' => 'required|exists:users,phone',
             ]);
-    
+
             $nip = $request->nip;
-    
+
             $newPassword = Str::random(10);
             $user = User::find($nip);
             if (!$user) {
@@ -49,7 +49,7 @@ class AuthController extends Controller
 
             $user->password = bcrypt($newPassword);
             $user->save();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Password berhasil direset',
@@ -68,4 +68,5 @@ class AuthController extends Controller
 
         return redirect()->route('auth.login')->with('success', 'Logout success');
     }
+
 }

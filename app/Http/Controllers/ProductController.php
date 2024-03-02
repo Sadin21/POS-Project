@@ -140,10 +140,6 @@ class ProductController extends Controller
                                 $query->where('products.code', 'LIKE', '%' . $code . '%');
                             }
                         });
-                        // ->where(function ($u) use ($name, $code) {
-                        //     if ($name) $u->where('products.name', 'LIKE', '%'. $name . '%');
-                        //     if ($code) $u->where('products.code', 'LIKE', '%'. $code . '%');
-                        // });
 
         if ($limit && is_numeric($limit))   $product->limit($limit);
         if ($offset && is_numeric($offset)) $product->offset($offset);

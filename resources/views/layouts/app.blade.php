@@ -21,8 +21,12 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>  
-        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script> 
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         @yield('style')
         <style>
@@ -39,7 +43,7 @@
                     <img src="{{ asset('assets/icons/person.svg') }}" alt="Profile" width="20px" height="20px" class="rounded-circle p-1">
                     <div class="text-truncate f14 user-select-none">{{ $user->name }}</div>
                 </div>
-    
+
                 <div class="dropdown-menu dropdown-menu-end p-2 border shadow bg-white" id="user-menu" style="width:300px">
                     <div class="d-flex w-100 align-items-center gap-4 px-2 pb-2 mb-2 border-bottom">
                         <div class="flex-grow-1">
@@ -88,11 +92,11 @@
 
         <script>
             const headers = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'content-type': 'application/json' };
-            
+
             function showAlert(icon, title, text) { Swal.fire({ icon, title, text }); }
-            
+
             function toggleBtn(btn, isDisabled = true) { btn.classList.toggle('btn-loading'); btn.disabled = isDisabled; }
-            
+
             function callApi({ url, next, error, method = 'GET', body = null }) {
                 return fetch(url, { method, headers, body }).then(async (res) => {
                     const r = await res.json();
@@ -104,17 +108,17 @@
                     if (error) error();
                 });
             }
-            
+
             const forms = document.body.querySelector('form');
             if (forms) {
                 forms.onsubmit = function (ev) {
                     ev.preventDefault();
 
                     if (!this.checkValidity()) ev.stopPropagation();
-                    
+
                     ev.submitter.disabled = true;
                     ev.submitter.classList.toggle('btn-loading');
-                    
+
                     this.submit();
                     this.classList.add('was-validated');
                 };
@@ -123,7 +127,7 @@
             document.getElementsByClassName('dropdown')[0].addEventListener('mouseenter', ({ target }) => target.children[0].click());
             document.getElementsByClassName('dropdown')[0].addEventListener('mouseleave', ({ target }) => target.children[0].click());
         </script>
-    
+
         @yield('script')
     </body>
 </html>

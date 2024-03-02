@@ -2,10 +2,10 @@
 @section('title', 'Transaksi')
 
 @section('style')
-    {{--    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">--}}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesh
+    eet"/>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @endsection
 
@@ -13,21 +13,12 @@
     <div class="d-flex flex-column gap-4 h-100">
         <div class="d-flex justify-content-between align-items-center flex-shrink-0 gap-4">
             <h4 class="m-0">Transaksi Barang</h4>
-            {{--
-                    <a class="btn btn-primary d-flex align-items-center gap-2 btn-sm" href="{{ route('product.store') }}">
-                        <ion-icon name="add" class="f24"></ion-icon>
-                        Tambah Barang
-                    </a> --}}
         </div>
 
         <div class="row">
             <div class="col-9">
                 <div class="card border-0 flex-grow-1 d-flex flex-column h-100">
                     <div class="border-bottom px-4 pt-4 pb-3 flex-shrink-0">
-                        {{-- <div class="position-relative search-box">
-                            <ion-icon name="search" class="f24 position-absolute"></ion-icon>
-                            <input type="text" id="filter-text-box" class="form-control" placeholder="Ketik untuk mencari..." onchange="search()">
-                        </div> --}}
                         <div class="col-12 mb-4">
                             <label class="form-label" for="item">Produk</label>
                             <select id="product-select" class="form-control" class="w-100">
@@ -38,6 +29,7 @@
                                         {{ $product->code  }} - {{ $product->name }}
                                     </option>
                                 @endforeach
+                                <option value="Cari"></option>
                             </select>
                             <button id="add-cart" class="btn btn-primary mt-2">Tambah ke Keranjang</button>
                         </div>
@@ -133,13 +125,9 @@
         </div>
     </div>
 
-
-    {{--    @include('partials.ag-grid.aggrid')--}}
-    {{--    @include('partials.ag-grid.aggrid-default-btn')--}}
-
     <script>
 
-        
+
         $(document).ready(function () {
 
             let currentDate = new Date().toJSON().slice(0, 10);
@@ -194,7 +182,7 @@
             });
 
             $(document).on("change", "input[name='jumlah']", function () {
-                const inputField = $(this); 
+                const inputField = $(this);
 
                 const inputId = inputField.attr("id");
                 const code = inputId.split("-")[2];
@@ -254,7 +242,7 @@
                         title: 'Oops...',
                         text: 'Tidak ada data barang!',
                     });
-                    return; 
+                    return;
                 }
 
                 const payment = $("#payment").val();
@@ -268,7 +256,7 @@
                         text: 'Jumlah uang pembayaran kurang',
                     });
                     $("#input-pay").val("");
-                    return; 
+                    return;
                 }
 
                 if (!payment || !pay || !returnVal) {
@@ -277,7 +265,7 @@
                         title: 'Peringatan',
                         text: 'Masukan jumlah uang pembayaran',
                     });
-                    return; 
+                    return;
                 }
 
                 $("#cart tr").each(function () {
@@ -296,7 +284,7 @@
                         title: 'Oops...',
                         text: 'Tidak ada data barang!',
                     });
-                    return; 
+                    return;
                 }
 
                 const requestData = {
@@ -321,80 +309,39 @@
                 });
             });
 
-
             $('#product-select').select2({
                 allowClear: true,
-                placeholder: 'Pilih Produk',
+                placeholder: 'Pilih produk',
                 ajax: {
                     delay: 250,
                     url: `{{ route('product.query') }}`,
-                    data: ({term}) => ({keyword: term, limit: 20, offset: 0, order: 'ASC', orderBy: 'name'}),
-                    processResults: ({data}) => ({
-                        results: $.map(data, ({id, name, code, sell_price}) => ({
-                            id: id,
-                            text: `${code} - ${name}`,
-                            name, code, sell_price
-                        }))
-                    })
+                    dataType: 'json',
+                    type: 'GET',
+                    data: function (params) {
+                        return {
+                            code: params.term,
+                            name: params.term
+                        };
+                    },
+                    processResults: function (data) {
+                        var select2Data = $.map(data.data, function (obj) {
+                            obj.id = obj.id;
+                            obj.text = obj.code + ' - ' + obj.name;
+
+                            return obj;
+                        })
+
+                        return {
+                            results: select2Data
+                        }
+                    },
+                    cache: true
                 }
             });
+
         });
-
-        {{--gridOptions.columnDefs = [--}}
-        {{--    {field: 'code', headerName: 'Kode Barang'},--}}
-        {{--    {field: 'name', headerName: 'Nama Barang'},--}}
-        {{--    {field: 'qty', headerName: 'Jumlah Barang'},--}}
-        {{--    {field: 'price', headerName: 'Total Harga'},--}}
-        {{--    {--}}
-        {{--        field: 'created_at',--}}
-        {{--        headerName: 'Tanggal Buat',--}}
-        {{--        valueFormatter: ({value}) => formatDateTime(value),--}}
-        {{--        sort: 'desc'--}}
-        {{--    },--}}
-        {{--    {--}}
-        {{--        field: 'action',--}}
-        {{--        headerName: 'Aksi',--}}
-        {{--        minWidth: 200,--}}
-        {{--        sortable: false,--}}
-        {{--        cellRenderer: AgGridDefaultBtn,--}}
-        {{--        cellRendererParams: {--}}
-        {{--            canDelete: true,--}}
-        {{--            deleteUrl: `{{ route('product.delete') }}`,--}}
-        {{--        }--}}
-        {{--    }--}}
-        {{--];--}}
-
-        {{--gridOptions.onGridReady = ({api}) => {--}}
-        {{--    const source = {--}}
-        {{--        getRows: (p) => {--}}
-        {{--            api.showLoadingOverlay();--}}
-
-        {{--            const limit = p.endRow - p.startRow;--}}
-        {{--            const {sort, colId} = p.sortModel[0];--}}
-        {{--            const keyword = document.getElementById('filter-text-box').value;--}}
-
-        {{--            callApi({--}}
-        {{--                url: `{{ route('product.query') }}?keyword=${keyword}&limit=${limit}&offset=${p.startRow}&order=${sort}&order_by=${colId}`,--}}
-        {{--                error: () => p.failCallback(),--}}
-        {{--                next: ({data}) => {--}}
-        {{--                    api.hideOverlay();--}}
-
-        {{--                    if (data.length === 0 && p.startRow === 0) api.showNoRowsOverlay();--}}
-        {{--                    p.successCallback(data, data.length < limit ? p.startRow + data.length : null);--}}
-        {{--                }--}}
-        {{--            });--}}
-        {{--        }--}}
-        {{--    };--}}
-        {{--    api.setDatasource(source);--}}
-        {{--};--}}
-
-        {{--function search() {--}}
-        {{--    gridOptions.api.refreshInfiniteCache();--}}
-        {{--}--}}
-
-        {{--document.addEventListener('DOMContentLoaded', () => (new agGrid.Grid(document.getElementById('grid'), gridOptions)));--}}
     </script>
 
-    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/select2.min.js') }}"></script> --}}
 
 @endsection
