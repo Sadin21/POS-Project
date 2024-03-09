@@ -44,12 +44,15 @@
                 </thead>
                 <tbody>
                 </tbody>
-            </table>        
+            </table>
         </div>
     </div>
 
     @include('partials.ag-grid.aggrid')
     @include('partials.ag-grid.aggrid-default-user-btn')
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
     <script>
         var filteredDate = {};
@@ -60,7 +63,7 @@
 
         document.getElementById('btn-filter').addEventListener('click', findDataOnTable);
         document.getElementById('btn-cancel').addEventListener('click', cancelData);
-    
+
         function getInputSearchValue() {
             clearTimeout(typingTimer);
             searchData = document.getElementById('search-data').value;
@@ -102,7 +105,7 @@
                             {data: 'address', name: 'alamat'},
                             {data: 'phone', name: 'nomor_hp'},
                             {
-                                data: 'photo', 
+                                data: 'photo',
                                 name: 'foto',
                                 render: function (data) {
                                     return `

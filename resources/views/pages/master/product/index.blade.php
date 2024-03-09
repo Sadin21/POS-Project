@@ -45,12 +45,15 @@
             </thead>
             <tbody>
             </tbody>
-        </table>        
+        </table>
     </div>
 </div>
 
 @include('partials.ag-grid.aggrid-product')
 @include('partials.ag-grid.aggrid-default-btn')
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script>
 
@@ -89,7 +92,7 @@
         $('#product-table').DataTable().destroy();
 
         console.log(searchData);
-        
+
         $.ajax({
             url: `{{ route('product.query') }}?name=${searchData?? 0}&code=${searchData?? 0}`,
             type: "GET",
@@ -104,7 +107,7 @@
                         {data: 'name', name: 'nama'},
                         {data: 'category_name', name: 'kategori'},
                         {
-                            data: 'photo', 
+                            data: 'photo',
                             name: 'foto',
                             render: function (data) {
                                 return `

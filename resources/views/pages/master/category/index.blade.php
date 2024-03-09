@@ -10,23 +10,23 @@
     <div class="col">
         <form action="{{ route('category.'. $mode, $mode === 'update'? [ 'id' => $category->id ] : null) }}" method="POST" enctype="multipart/form-data">
             @csrf
-            
+
             <div class="card border-0 p-4">
                 <div class="fw-medium pb-5 f18">Tambah Kategori</div>
-    
+
                 <div class="d-flex pb-5 gap-5">
                     <div class="w-25 flex-shrink-0">
                         <div class="d-flex align-items-center gap-2">
                             <div class="fw-medium text-gray">Nama Kategori</div>
-            
+
                             <div class="badge text-bg-success required-badge fw-medium">Wajib</div>
                         </div>
-            
+
                         <div class="f14 pt-2">
                             *untuk ubah nama kategori klik "ubah" pada daftar kategori lalu ubah pada form disamping
                         </div>
                     </div>
-            
+
                     <div class="flex-grow-1">
                         <input type="text" placeholder="Contoh: Olahraga" class="form-control" id="name" name="name" required value="{{ isset($category) ? $category->name : '' }}">
                     </div>
@@ -36,7 +36,7 @@
                 <a class="btn form-btn btn-outline-danger text-decoration-none" href="{{ route('category.index') }}">
                     Batalkan
                 </a>
-                
+
                 <button class="btn form-btn btn-primary" type="submit">
                     Simpan
                 </button>
@@ -75,12 +75,15 @@
             </thead>
             <tbody>
             </tbody>
-        </table>        
+        </table>
     </div>
 </div>
 
 @include('partials.ag-grid.aggrid')
 @include('partials.ag-grid.aggrid-default-btn')
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script>
     var filteredDate = {};
@@ -173,7 +176,7 @@
                                     `;
                             });
 
-                            htmlContent += '</div>'; 
+                            htmlContent += '</div>';
 
                             Swal.fire({
                                 title: "Detail Produk",
