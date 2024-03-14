@@ -23,17 +23,18 @@ class ImportProduct implements ToModel, WithStartRow
     public function model(array $row)
     {
         $productCode = $row[1];
-    
+
         $product = Product::firstOrNew(['code' => $productCode]);
-        
+
         $product->name = $row[0];
         $product->code = $productCode;
         $product->photo = $row[2];
-        $product->sale_price = $row[3];
-        $product->qty += (int)$row[4];
-        $product->available_qty += (int)$row[4];
-        $product->category_id = (int)$row[5];
-        
+        $product->buy_price = $row[3];
+        $product->sale_price = $row[4];
+        $product->qty += (int)$row[5];
+        $product->available_qty += (int)$row[5];
+        $product->category_id = (int)$row[6];
+
         $product->save();
     }
 }
