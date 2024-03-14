@@ -51,6 +51,9 @@ class ProductController extends Controller
 
         $input['available_qty'] = $input['qty'];
 
+        $existCode = Product::where('code', $input['code'])->first();
+        if ($existCode) return redirect()->back()->with('error', 'Kode barang sudah ada');
+
         $file = $request->file('photo');
         $fileName = Random::generate(10) . '.' . $file->extension();
         $file->move(public_path('assets/imgs'), $fileName);
