@@ -57,7 +57,7 @@ Route::controller(TransactionReportController::class)->prefix('transaction')->na
     Route::match(['get', 'post'], '{id}', 'update')->name('update');
 });
 
-Route::group(['middleware' => ['auth', 'admin']], function () {
+// Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::controller(UserController::class)->prefix('user')->name('user.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::match(['get', 'post'], 'store', 'store')->name('store');
@@ -65,4 +65,4 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
         Route::match(['get', 'post'], '{nip}/reset', 'reset')->name('reset');
         // Route::delete('{nip}/delete', 'destroy')->name('delete');
     });
-});
+// });

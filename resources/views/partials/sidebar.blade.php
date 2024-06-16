@@ -8,7 +8,7 @@
         <ion-icon name="cube" class="f20"></ion-icon>
         <div class="fw-medium">Kelola Barang</div>
     </div>
-    
+
     <ion-icon name="chevron-up" class="f20"></ion-icon>
 </div>
 <div class="collapse show ps-4" id="product-item">
@@ -21,7 +21,7 @@
     </a>
 </div>
 
-@if (auth()->user()->role_id === 1)
+@if (auth()->user()->role_id == 1)
 <a class="sidebar-menu text-decoration-none text-body position-relative mb-1 d-flex align-items-center gap-2 user-select-none cursor-pointer py-2 px-3 {{ str_contains(Route::currentRouteName(), 'transaction')? 'active' : '' }}" href="{{ route('transaction.index') }}">
     <ion-icon name="bar-chart" class="f20"></ion-icon>
     <div class="fw-medium">Laporan Penjualan</div>
@@ -29,7 +29,7 @@
 @endif
 
 <div class="border-bottom pt-1 mb-1 mx-2"></div>
-@if (auth()->user()->role_id === 1)
+@if (auth()->user()->role_id == 1)
     <a class="sidebar-menu text-decoration-none text-body position-relative mb-1 d-flex align-items-center gap-2 user-select-none cursor-pointer py-2 px-3 {{ str_contains(Route::currentRouteName(), 'user')? 'active' : '' }}" href="{{ route('user.index') }}">
         <ion-icon name="person-circle" class="f20"></ion-icon>
         <div class="fw-medium">Kelola Akun</div>
