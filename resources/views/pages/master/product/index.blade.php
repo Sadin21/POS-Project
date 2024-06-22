@@ -111,7 +111,7 @@
                             name: 'foto',
                             render: function (data) {
                                 return `
-                                    <img src="/assets/imgs/${data}" class="img-fluid border border-2 border-primary rounded w-40 h-50" alt="">
+                                    <img src="/storage/assets/imgs/${data}" class="img-fluid border border-2 border-primary rounded w-40 h-50" alt="">
                                 `;
                             }
                         },
@@ -125,7 +125,7 @@
                             render: function (data, type, row) {
                                 return `
                                     <a class="btn btn-sm btn-light border border-1" href="#" onclick="editRow(${row.id})">Ubah</a>
-                                    <a class="btn btn-sm btn-danger" href="#" onclick="hapusRow(${row.id})">Hapus</a>
+                                    <a class="btn btn-sm btn-danger" href="#" onclick="hapusRow(${row.id}, event)">Hapus</a>
                                 `;
                             }
                         },
@@ -141,10 +141,13 @@
     }
 
     function editRow(id) {
-        window.location.href = `{{ route('product.update', 'id') }}`.replace('id', id);
+        window.location.href = updateProductUrl.replace(':id', id);
+        // window.location.href = `{{ route('product.update', 'id') }}`.replace('id', id);
     }
 
-    function hapusRow(id) {
+    function hapusRow(id, event) {
+        event.preventDefault();
+
         Swal.fire({
             title: 'Hapus Data?',
             text: 'Anda yakin ingin menghapus data ini?',
@@ -158,13 +161,14 @@
             if (result.isConfirmed) {
                 $.ajax({
                     type: 'DELETE',
-                    url: `{{ route('product.delete', ['id' => 'id']) }}`.replace('id', id),
+                    url: deleteProductUrl.replace(':id', id),
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (data) {
-                        Swal.fire('Berhasil!', data.message, 'success');
-                        location.reload(true);
+                        Swal.fire('Berhasil!', data.message, 'success').then(() => {
+                            location.reload();
+                        });
                     },
                     error: function (error) {
                         Swal.fire('Gagal', error.responseJSON.message, 'error');

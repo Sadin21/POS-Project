@@ -20,18 +20,18 @@
                             <div class="w-25 flex-shrink-0">
                                 <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">Nama Barang</div>
-                    
+
                                     <div class="badge text-bg-primary required-badge fw-medium">Wajib</div>
                                 </div>
                             </div>
                             <input type="text" placeholder="Masukkan Nama Barang" class="form-control" id="name" name="name" required value="{{ isset($product) ? $product->name : '' }}">
                         </div>
-                
+
                         <div class="d-flex pb-5 gap-5">
                             <div class="w-25 flex-shrink-0">
                                 <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">Kode Barang</div>
-                    
+
                                     <div class="badge text-bg-primary required-badge fw-medium">Wajib</div>
                                 </div>
                             </div>
@@ -44,12 +44,12 @@
                                 </button>
                             </div>
                         </div>
-                
+
                         <div class="d-flex pb-5 gap-5">
                             <div class="w-25 flex-shrink-0">
                                 <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">Foto</div>
-                    
+
                                     <div class="badge text-bg-secondary required-badge fw-medium">Optional</div>
                                 </div>
                             </div>
@@ -65,18 +65,18 @@
                                 </div>
                             </div>
                         </div>
-                
+
                         <div class="d-flex pb-5 gap-5">
                             <div class="w-25 flex-shrink-0">
                                 <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">Harga Beli</div>
-                    
+
                                     <div class="badge text-bg-secondary required-badge fw-medium">Optional</div>
                                 </div>
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text" id="buy_price">Rp</span>
-                                <input type="number" placeholder="Masukkan Harga Barang" class="form-control" id="buy_price" name="buy_price" required value="{{ isset($product) ? $product->buy_price : '' }}" aria-describedby="sale_price">
+                                <input type="number" placeholder="Masukkan Harga Barang" class="form-control" id="buy_price" name="buy_price" value="{{ isset($product) ? $product->buy_price : '' }}" aria-describedby="sale_price">
                             </div>
                         </div>
 
@@ -84,32 +84,32 @@
                             <div class="w-25 flex-shrink-0">
                                 <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">Harga Jual</div>
-                    
+
                                     <div class="badge text-bg-secondary required-badge fw-medium">Optional</div>
                                 </div>
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text" id="sale_price">Rp</span>
-                                <input type="number" placeholder="Masukkan Harga Barang" class="form-control" id="sale_price" name="sale_price" required value="{{ isset($product) ? $product->sale_price : '' }}" aria-describedby="sale_price">
+                                <input type="number" placeholder="Masukkan Harga Barang" class="form-control" id="sale_price" name="sale_price" value="{{ isset($product) ? $product->sale_price : '' }}" aria-describedby="sale_price">
                             </div>
                         </div>
-                
+
                         <div class="d-flex pb-5 gap-5">
                             <div class="w-25 flex-shrink-0">
                                 <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">Kuantitas</div>
-                    
+
                                     <div class="badge text-bg-secondary required-badge fw-medium">Optional</div>
                                 </div>
                             </div>
-                            <input type="number" placeholder="Masukkan Jumlah Barang" class="form-control" id="qty" name="qty" required value="{{ isset($product) ? $product->qty : '' }}">
+                            <input type="number" placeholder="Masukkan Jumlah Barang" class="form-control" id="qty" name="qty" value="{{ isset($product) ? $product->qty : '' }}">
                         </div>
-                
+
                         <div class="d-flex pb-5 gap-5">
                             <div class="w-25 flex-shrink-0">
                                 <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">Kategori Barang</div>
-                    
+
                                     <div class="badge text-bg-primary required-badge fw-medium">Wajib</div>
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                             <a class="btn form-btn btn-outline-danger text-decoration-none" href="{{ route('product.index') }}">
                                 Batalkan
                             </a>
-                            
+
                             <button class="btn form-btn btn-primary" type="submit">
                                 Simpan
                             </button>
@@ -135,12 +135,12 @@
                     <form action="{{ route('product.import') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="fw-medium pb-5 f18">Upload File Excel</div>
-        
+
                         <div class="d-flex pb-5 gap-5">
                             <div class="w-25 flex-shrink-0">
                                 <div class="align-items-center gap-2">
                                     <div class="fw-medium text-gray">File .csv/xls/xlsx</div>
-                    
+
                                     <div class="badge text-bg-secondary required-badge fw-medium">Optional</div>
                                 </div>
                             </div>
@@ -150,7 +150,7 @@
                             {{-- <a class="btn form-btn btn-outline-danger text-decoration-none" href="{{ route('product.index') }}">
                                 Batalkan
                             </a> --}}
-                            
+
                             <button class="btn form-btn btn-primary" type="submit">
                                 Simpan
                             </button>
@@ -182,11 +182,11 @@
     <script>
         const chooseFile = document.getElementById("photo");
         const imgPreview = document.getElementById("img-preview");
-    
+
         chooseFile.addEventListener("change", function () {
             getImgData();
         });
-    
+
         function getImgData() {
             const files = chooseFile.files[0];
             if (files) {

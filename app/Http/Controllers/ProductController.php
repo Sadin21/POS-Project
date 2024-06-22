@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Nette\Utils\Random;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -42,22 +43,28 @@ class ProductController extends Controller
         $input = $this->validate($request, [
             'name'          => 'required|string|max:255',
             'code'          => 'required|string|max:255',
-            'photo'         => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'buy_price'    => 'required|numeric',
-            'sale_price'    => 'required|numeric',
-            'qty'           => 'required|numeric',
+            'photo'         => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'buy_price'    => 'numeric',
+            // 'sale_price'    => 'numeric',
+            // 'qty'           => 'numeric',
             'category_id'   => 'required|numeric|exists:categories,id',
         ]);
 
-        $input['available_qty'] = $input['qty'];
+        $input['buy_price'] = $request->file('buy_price')? $input['buy_price'] : '0';
+        $input['sale_price'] = $request->file('sale_price')? $input['sale_price'] : '0';
+        $input['qty'] = $request->file('qty')? $input['qty'] : '0';
+        $input['available_qty'] = $request->file('qty')? $input['qty'] : '0';
 
         $existCode = Product::where('code', $input['code'])->first();
         if ($existCode) return redirect()->back()->with('error', 'Kode barang sudah ada');
 
-        $file = $request->file('photo');
-        $fileName = Random::generate(10) . '.' . $file->extension();
-        $file->move(public_path('assets/imgs'), $fileName);
-        $input['photo'] = $fileName;
+        if ($file = $request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $fileName = Random::generate(10) . '.' . $file->extension();
+            // $file->move(public_path('assets/imgs'), $fileName);
+            Storage::disk('public')->putFileAs('assets/imgs', $file, $fileName);
+            $input['photo'] = $fileName;
+        }
 
         try {
             Product::create($input);
@@ -80,18 +87,22 @@ class ProductController extends Controller
             'name'          => 'required|string|max:255',
             'code'          => 'required|string|max:255',
             'photo'         => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'buy_price'    => 'required|numeric',
-            'sale_price'    => 'required|numeric',
-            'qty'           => 'required|numeric',
+            // 'buy_price'    => 'required|numeric',
+            // 'sale_price'    => 'required|numeric',
+            // 'qty'           => 'required|numeric',
             'category_id'   => 'required|numeric|exists:categories,id',
         ]);
 
-        $input['available_qty'] = $input['qty'];
+        $input['buy_price'] = $request->file('buy_price')? $input['buy_price'] : '0';
+        $input['sale_price'] = $request->file('sale_price')? $input['sale_price'] : '0';
+        $input['qty'] = $request->file('qty')? $input['qty'] : '0';
+        $input['available_qty'] = $request->file('qty')? $input['qty'] : '0';
 
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
             $fileName = Random::generate(10) . '.' . $file->extension();
-            $file->move(public_path('assets/imgs'), $fileName);
+            // $file->move(public_path('assets/imgs'), $fileName);
+            Storage::disk('public')->putFileAs('assets/imgs', $file, $fileName);
             $input['photo'] = $fileName;
         }
 
@@ -105,11 +116,15 @@ class ProductController extends Controller
     }
 
     public function destroy(Request $request, $id): JsonResponse{
-        $product = Product::find($id);
-        if (!$product) return response()->json([ 'message' => 'Data tidak ditemukan' ], 404);
+        try {
+            $product = Product::find($id);
+            if (!$product) return response()->json([ 'message' => 'Data tidak ditemukan' ], 404);
 
-        $product->delete();
-        return response()->json([ 'message' => 'Data berhasil dihapus' ]);
+            $product->delete();
+            return response()->json([ 'message' => 'Data berhasil dihapus' ]);
+        } catch (\Throwable $e) {
+            return response()->json([ 'message' => 'Data gagal dihapus' ]);
+        }
     }
 
     public function getDataById($code)

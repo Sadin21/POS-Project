@@ -128,6 +128,13 @@
             document.getElementsByClassName('dropdown')[0].addEventListener('mouseleave', ({ target }) => target.children[0].click());
         </script>
 
+        <script>
+            var deleteProductUrl = "{{ route('product.delete', ':id') }}";
+            var deleteCategoryUrl = "{{ route('category.delete', ':id') }}";
+
+            var baseUrl = "{{ env('APP_URL') }}";
+        </script>
+
         @yield('script')
     </body>
 </html>

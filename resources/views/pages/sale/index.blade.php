@@ -199,6 +199,8 @@
                                 text: 'Jumlah barang melebihi stok!',
                             });
                             inputField.val(1);
+                            $("#text-total-product").text("0 Barang");
+                            $("#text-total").text("0");
                             return;
                         }
                     },
