@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('sale_invoice_line', function (Blueprint $table) {
             $table->id();
             $table->foreignId('hdr_id')->constrained('sale_invoice_hdr');
-            $table->foreignId('product_id')->constrained('products');
+            $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->bigInteger('sale_price');
             $table->integer('qty');
             $table->bigInteger('subtotal');

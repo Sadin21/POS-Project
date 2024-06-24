@@ -55,10 +55,10 @@ class CategoryController extends Controller
         $category = Category::find($id);
         if (!$category) return response()->json(['message' => 'Data tidak ditemukan'], 404);
 
-        if (Product::where('category_id', $category->id)->exists()) return response()->json(['message' => 'Data tidak dapat dihapus karena masih digunakan'], 400);
+        if (Product::where('category_id', $category->id)->exists()) return response()->json(['success' => false, 'message' => 'Data tidak dapat dihapus karena masih digunakan'], 400);
 
         $category->delete();
-        return response()->json(['message' => 'Data berhasil dihapus'], 200);
+        return response()->json(['success' => true, 'message' => 'Data berhasil dihapus'], 200);
     }
 
     public function query(Request $request): JsonResponse {
@@ -92,11 +92,11 @@ class CategoryController extends Controller
 
     public function getDetailProduct(Request $request): JsonResponse {
         $products = Product::where('category_id', $request->id)->get();
-    
+
         if ($products->isEmpty()) {
             return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
-    
+
         return response()->json(['products' => $products, 'message' => 'Success'], 200);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Imports\ImportProduct;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\InvoiceLine;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -38,30 +39,30 @@ class ProductController extends Controller
         $mode = 'store';
         $categories = Category::get();
 
-        if ($request->getMethod() === 'GET') return view('pages.master.product.form', compact('categories', 'mode'));
+        if ($request->getMethod() === 'GET') {
+            return view('pages.master.product.form', compact('categories', 'mode'));
+        }
 
-        $input = $this->validate($request, [
+        $input = $request->validate([
             'name'          => 'required|string|max:255',
             'code'          => 'required|string|max:255',
-            'photo'         => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            // 'buy_price'    => 'numeric',
-            // 'sale_price'    => 'numeric',
-            // 'qty'           => 'numeric',
+            'photo'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'category_id'   => 'required|numeric|exists:categories,id',
         ]);
 
-        $input['buy_price'] = $request->file('buy_price')? $input['buy_price'] : '0';
-        $input['sale_price'] = $request->file('sale_price')? $input['sale_price'] : '0';
-        $input['qty'] = $request->file('qty')? $input['qty'] : '0';
-        $input['available_qty'] = $request->file('qty')? $input['qty'] : '0';
+        $input['buy_price'] = $request->filled('buy_price') ? $request->input('buy_price') : 0;
+        $input['sale_price'] = $request->filled('sale_price') ? $request->input('sale_price') : 0;
+        $input['qty'] = $request->filled('qty') ? $request->input('qty') : 0;
+        $input['available_qty'] = $request->filled('qty') ? $request->input('qty') : 0;
 
         $existCode = Product::where('code', $input['code'])->first();
-        if ($existCode) return redirect()->back()->with('error', 'Kode barang sudah ada');
+        if ($existCode) {
+            return redirect()->back()->with('error', 'Kode barang sudah ada');
+        }
 
-        if ($file = $request->hasFile('photo')) {
+        if ($request->hasFile('photo')) {
             $file = $request->file('photo');
             $fileName = Random::generate(10) . '.' . $file->extension();
-            // $file->move(public_path('assets/imgs'), $fileName);
             Storage::disk('public')->putFileAs('assets/imgs', $file, $fileName);
             $input['photo'] = $fileName;
         }
@@ -78,7 +79,6 @@ class ProductController extends Controller
         $mode = 'update';
         $categories = Category::get();
         $product = Product::find($id);
-        // dd($product);
         if (!$product) return redirect()->back()->with('error', 'Data tidak ditemukan');
 
         if ($request->getMethod() === 'GET') return view('pages.master.product.form', compact('mode', 'categories', 'product'));
@@ -93,10 +93,14 @@ class ProductController extends Controller
             'category_id'   => 'required|numeric|exists:categories,id',
         ]);
 
-        $input['buy_price'] = $request->file('buy_price')? $input['buy_price'] : '0';
-        $input['sale_price'] = $request->file('sale_price')? $input['sale_price'] : '0';
-        $input['qty'] = $request->file('qty')? $input['qty'] : '0';
-        $input['available_qty'] = $request->file('qty')? $input['qty'] : '0';
+        $input['buy_price'] = $request->input('buy_price', $product->buy_price);
+        $input['sale_price'] = $request->input('sale_price', $product->sale_price);
+
+        if ($request->input('qty')) {
+            $input['qty'] = $request->input('qty');
+            $qtyDiff = (int)$request->input('qty') - (int)$product->qty;
+            $input['available_qty'] = (int)$product->available_qty + $qtyDiff;
+        }
 
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
@@ -117,19 +121,25 @@ class ProductController extends Controller
 
     public function destroy(Request $request, $id): JsonResponse{
         try {
-            $product = Product::find($id);
-            if (!$product) return response()->json([ 'message' => 'Data tidak ditemukan' ], 404);
+            DB::beginTransaction();
 
+            InvoiceLine::where('product_id', $id)->delete();
+
+            $product = Product::findOrFail($id);
             $product->delete();
-            return response()->json([ 'message' => 'Data berhasil dihapus' ]);
-        } catch (\Throwable $e) {
-            return response()->json([ 'message' => 'Data gagal dihapus' ]);
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Barang berhasil dihapus.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Barang gagal dihapus. ' . $e->getMessage()]);
+            // return response()->json(['success' => false, 'message' => 'Barang gagal dihapus.']);
         }
     }
 
     public function getDataById($code)
     {
-        // dd($request->code);
         $product = Product::where('code', $code)->get();
 
         return response()->json($product);
@@ -148,6 +158,7 @@ class ProductController extends Controller
                         ->join('categories', 'products.category_id', '=', 'categories.id')
                         ->select('products.id', 'products.name', 'products.code', 'products.photo', 'products.sale_price', 'products.qty', 'products.available_qty', 'products.buy_price', 'products.created_at', 'products.updated_at', 'categories.name as category_name')
                         ->orderBy($orderBy, $order)
+                        ->where('products.deleted_at', null)
                         ->where(function ($query) use ($name) {
                             if ($name) {
                                 $query->where('products.name', 'LIKE', '%' . $name . '%');

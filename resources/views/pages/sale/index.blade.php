@@ -182,43 +182,52 @@
             });
 
             $(document).on("change", "input[name='jumlah']", function () {
-                const inputField = $(this);
+            const inputField = $(this);
 
-                const inputId = inputField.attr("id");
-                const code = inputId.split("-")[2];
+            const inputId = inputField.attr("id");
+            const code = inputId.split("-")[2];
 
-                $.ajax({
-                    type: "GET",
-                    url: `api/product/${code}`,
-                    success: function (response) {
-                        const qty = response[0].available_qty;
-                        if (inputField.val() > qty) {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Peringatan',
-                                text: 'Jumlah barang melebihi stok!',
-                            });
-                            inputField.val(1);
-                            $("#text-total-product").text("0 Barang");
-                            $("#text-total").text("0");
-                            return;
-                        }
-                    },
-                    error: function (error) {
-                        alert("Terjadi kesalahan saat menyimpan data.\n" + error.responseText);
+            const originalValue = inputField.data('original-value') || inputField.val();
+
+            $.ajax({
+                type: "GET",
+                url: `api/product/${code}`,
+                success: function (response) {
+                    const qty = response[0].available_qty;
+                    console.log("Available qty from API:", qty);
+                    console.log("Input value:", inputField.val());
+
+                    if (parseFloat(inputField.val()) > parseFloat(qty)) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: 'Jumlah barang melebihi stok!',
+                        });
+                        inputField.val(originalValue); // Reset to original value
+                        inputField.data('original-value', originalValue); // Update the original value
+                        $("#text-total-product").text(originalValue + " Barang");
+                        $("#text-total").text(0);
+                        return;
                     }
-                });
 
-                const rowId = "row-" + code;
-                const rowElement = $('#' + rowId);
-                const subtotal = inputField.val() * rowElement.data("price");
-                rowElement.data('total-price', subtotal);
-                rowElement.data('qty', inputField.val());
+                    const rowId = "row-" + code;
+                    const rowElement = $('#' + rowId);
+                    const subtotal = parseFloat(inputField.val()) * parseFloat(rowElement.data("price"));
+                    rowElement.data('total-price', subtotal);
+                    rowElement.data('qty', inputField.val());
 
-                const subtotalElement = $('#text-total-' + rowId)
-                subtotalElement.text(subtotal);
-                calculate();
+                    const subtotalElement = $('#text-total-' + rowId);
+                    subtotalElement.text(subtotal);
+                    calculate();
+                },
+                error: function (error) {
+                    alert("Terjadi kesalahan saat menyimpan data.\n" + error.responseText);
+                }
             });
+
+            inputField.data('original-value', inputField.val());
+        });
+
 
             $(document).on("click", "button[id^='btn-delete-']", function () {
                 const buttonId = $(this).data("row-id");

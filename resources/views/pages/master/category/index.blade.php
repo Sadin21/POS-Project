@@ -154,7 +154,7 @@
     }
 
     function editRow(id) {
-        window.location.href = (baseUrl + "/category/:id").replace(':id', id);;
+        window.location.href = (baseUrl + "/category/:id").replace(':id', id);
     }
 
     function detailRow(id) {
@@ -203,7 +203,7 @@
         });
     }
 
-    function hapusRow(id, event, event) {
+    function hapusRow(id, event) {
         event.preventDefault();
         Swal.fire({
             title: 'Hapus Data?',
@@ -223,6 +223,11 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (data) {
+                        if (data.success == false) {
+                            Swal.fire('Gagal', data.message, 'error');
+                            return;
+                        }
+
                         Swal.fire('Berhasil!', data.message, 'success').then(() => {
                             location.reload();
                         });

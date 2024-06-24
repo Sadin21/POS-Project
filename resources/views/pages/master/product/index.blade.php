@@ -141,7 +141,7 @@
     }
 
     function editRow(id) {
-        window.location.href = updateProductUrl.replace(':id', id);
+        window.location.href = (baseUrl + "/product/:id").replace(':id', id);
         // window.location.href = `{{ route('product.update', 'id') }}`.replace('id', id);
     }
 
@@ -166,6 +166,11 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (data) {
+                        if (data.success == false) {
+                            Swal.fire('Gagal', data.message, 'error');
+                            return;
+                        }
+
                         Swal.fire('Berhasil!', data.message, 'success').then(() => {
                             location.reload();
                         });
