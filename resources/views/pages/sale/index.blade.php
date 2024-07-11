@@ -194,8 +194,8 @@
                 url: `api/product/${code}`,
                 success: function (response) {
                     const qty = response[0].available_qty;
-                    console.log("Available qty from API:", qty);
-                    console.log("Input value:", inputField.val());
+                    // console.log("Available qty from API:", qty);
+                    // console.log("Input value:", inputField.val());
 
                     if (parseFloat(inputField.val()) > parseFloat(qty)) {
                         Swal.fire({
@@ -270,14 +270,14 @@
                     return;
                 }
 
-                if (!payment || !pay || !returnVal) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Peringatan',
-                        text: 'Masukan jumlah uang pembayaran',
-                    });
-                    return;
-                }
+                // if (!payment || !pay || !returnVal) {
+                //     Swal.fire({
+                //         icon: 'warning',
+                //         title: 'Peringatan',
+                //         text: 'Masukan jumlah uang pembayaran',
+                //     });
+                //     return;
+                // }
 
                 $("#cart tr").each(function () {
                     const row = $(this);

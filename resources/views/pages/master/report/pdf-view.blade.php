@@ -55,8 +55,12 @@
             <td>{{ $totalSaledQty }}</td>
         </tr>
         <tr>
-            <td>Keuntungan</td>
+            <td>total Keuntungan</td>
             <td>{{ $totalIncome }}</td>
+        </tr>
+        <tr>
+            <td>total Pendapatan</td>
+            <td>{{ $grandTotal }}</td>
         </tr>
     </table>
     </body>

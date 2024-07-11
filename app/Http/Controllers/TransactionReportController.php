@@ -36,13 +36,13 @@ class TransactionReportController extends Controller
         ->groupBy(DB::raw("DATE(created_at)"))
         ->orderBy(DB::raw("DATE(created_at)"), 'asc')
         ->get();
-    
+
         $labels = [];
         $data = [];
 
         foreach ($sales as $sale) {
-            $labels[] = $sale->date; 
-            $data[] = $sale->count; 
+            $labels[] = $sale->date;
+            $data[] = $sale->count;
         };
 
         // dd($labels, $data);
@@ -107,13 +107,14 @@ class TransactionReportController extends Controller
                     $query->where('sale_invoice_hdr.sale_no', '=', $saleNo);
                 }
             })
-            ->get(); 
+            ->get();
 
         $totalIncome = DB::table('sale_invoice_hdr')
             ->join('sale_invoice_line', 'sale_invoice_line.hdr_id', '=', 'sale_invoice_hdr.id')
             ->join('products', 'products.id', '=', 'sale_invoice_line.product_id')
             ->select(
-                DB::raw('(products.sale_price - products.buy_price) as net_income')
+                DB::raw('(products.sale_price - products.buy_price) as net_income'),
+                'sale_invoice_hdr.grandtotal'
             )
             ->where(function($query) use ($startDate, $endDate) {
                 if ($startDate) {
@@ -151,8 +152,9 @@ class TransactionReportController extends Controller
         // dd($totalIncome->get()->sum('net_income'));
 
         $htmlContent = view('pages.master.report.pdf-view', [
-            'data' => $data, 
-            'totalIncome' => $totalIncome->get()->sum('net_income'), 
+            'data' => $data,
+            'totalIncome' => $totalIncome->get()->sum('net_income'),
+            'grandTotal' => $totalIncome->get()->sum('grandtotal'),
             'totalSaledQty' => $totalSaledQty->get()->sum('total_qty')])->render();
         $mpdf->WriteHTML($htmlContent);
 
@@ -203,7 +205,8 @@ class TransactionReportController extends Controller
             ->join('sale_invoice_line', 'sale_invoice_line.hdr_id', '=', 'sale_invoice_hdr.id')
             ->join('products', 'products.id', '=', 'sale_invoice_line.product_id')
             ->select(
-                DB::raw('(products.sale_price - products.buy_price) as net_income')
+                DB::raw('(products.sale_price - products.buy_price) as net_income'),
+                'sale_invoice_hdr.grandtotal'
             )
             ->where(function($query) use ($startDate, $endDate) {
                 if ($startDate) {
@@ -257,6 +260,7 @@ class TransactionReportController extends Controller
             'data' => [
                 'sale' => $sale->get(),
                 'totalIncome' => $totalIncome->get()->sum('net_income'),
+                'grandTotal' => $totalIncome->get()->sum('grandtotal'),
                 'totalSaledQty' => $totalSaledQty->get()->sum('total_qty'),
             ],
             'message' => 'Success',

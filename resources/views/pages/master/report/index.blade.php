@@ -20,12 +20,12 @@
         <div class="d-flex justify-content-end align-items-center flex-shrink-0 gap-4">
             <div class="pt-4 pb-3 flex-shrink-0">
                 <div class="position-relative search-box">
-                    <input type="date" id="start_date" class="form-control" name="start_date" placeholder="">
+                    <input type="text" id="start_date" class="form-control" name="start_date" placeholder="Tanggal mulai" onfocus="(this.type='date')">
                 </div>
             </div>
             <div class="px-2 pt-4 pb-3 flex-shrink-0">
                 <div class="position-relative search-box">
-                    <input type="date" id="end_date" class="form-control" name="end_date" placeholder="">
+                    <input type="text" id="end_date" class="form-control" name="end_date" placeholder="Tanggal selesai" onfocus="(this.type='date')">
                 </div>
             </div>
             <div class="pt-4 pb-3 flex-shrink-0">
@@ -51,12 +51,12 @@
                 <div class="d-flex">
                     <div class="pt-4 pb-3 flex-shrink-0">
                         <div class="position-relative search-box">
-                            <input type="date" id="start_date_table" class="form-control" name="start_date" placeholder="">
+                            <input type="text" id="start_date_table" class="form-control" name="start_date" placeholder="Tanggal mulai" onfocus="(this.type='date')">
                         </div>
                     </div>
                     <div class="px-2 pt-4 pb-3 flex-shrink-0">
                         <div class="position-relative search-box">
-                            <input type="date" id="end_date_table" class="form-control" name="end_date" placeholder="">
+                            <input type="text" id="end_date_table" class="form-control" name="end_date" placeholder="Tanggal selesai" onfocus="(this.type='date')">
                         </div>
                     </div>
                     <div class="pt-4 pb-3 flex-shrink-0">
@@ -100,8 +100,12 @@
                     <p class="ms-2 fw-bold" id="totalSaledQty">0</p>
                 </div>
                 <div class="col d-flex">
-                    <p>Keuntungan</p>
+                    <p>Total Keuntungan</p>
                     <p class="ms-2 fw-bold" id="totalIncome">0</p>
+                </div>
+                <div class="col d-flex">
+                    <p>Total Pendapatan</p>
+                    <p class="ms-2 fw-bold" id="grandTotal">0</p>
                 </div>
             </div>
 
@@ -178,6 +182,7 @@
 
                     $('#totalSaledQty').html(res.data.totalSaledQty);
                     $('#totalIncome').html(res.data.totalIncome);
+                    $('#grandTotal').html(res.data.grandTotal);
 
                     var rotationTable = $('#report-table').DataTable({
                         data: originalData,

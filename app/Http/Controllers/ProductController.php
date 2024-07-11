@@ -46,7 +46,7 @@ class ProductController extends Controller
         $input = $request->validate([
             'name'          => 'required|string|max:255',
             'code'          => 'required|string|max:255',
-            'photo'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'category_id'   => 'required|numeric|exists:categories,id',
         ]);
 
@@ -86,7 +86,7 @@ class ProductController extends Controller
         $input = $this->validate($request, [
             'name'          => 'required|string|max:255',
             'code'          => 'required|string|max:255',
-            'photo'         => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo'         => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             // 'buy_price'    => 'required|numeric',
             // 'sale_price'    => 'required|numeric',
             // 'qty'           => 'required|numeric',
